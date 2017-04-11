@@ -1,0 +1,13 @@
+Requirements:
+    - User should be able to send a private message to the bot,
+      containing the name of an anime and should recieve back:
+        - Information Links
+        - Available Official Streaming Sites
+        - Synopsis of Anime
+        - Main Cast Info
+        - Picture of Anime
+
+Modules to make:
+    - Main message sender
+    - Listing Checker
+    - Stream Checker
