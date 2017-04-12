@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/AnimeMessengerRedditBot.iml" filepath="$PROJECT_DIR$/.idea/AnimeMessengerRedditBot.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../RedditBotExample/.idea/RedditBotExample.iml" filepath="$PROJECT_DIR$/../RedditBotExample/.idea/RedditBotExample.iml" />
     </modules>
   </component>
 </project>
