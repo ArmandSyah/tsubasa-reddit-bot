@@ -24,7 +24,7 @@ def get_anime_links(title):
         sys.exit(1)
 
     soup = bs4.BeautifulSoup(res.text, "html.parser")
-    links = [element.get("href") for element in soup.select("a.hoverinfo_trigger.fw-b.fl-l")]
+    links = [element.get("href") for element in soup.select("a.hoverinfo_trigger.fw-b.fl-l", limit=5)]
     print(links)
 
     return links
@@ -33,7 +33,7 @@ def get_anime_links(title):
 def get_anime_info(link):
     """
     Opens up a link to an anime page and then scrapes out all acompanying info
-    :param link: 
+    :param link: A MAL link to a specific anime
     :return: A tuple containing the name of the anime, information about the anime, and a MAL Link to the anime
     """
     try:
@@ -41,6 +41,9 @@ def get_anime_info(link):
         res.raise_for_status()
     except requests.exceptions.ConnectionError:
         print("Failed to connect to url")
+        return
+    except requests.exceptions.HTTPError:
+        print("Too many requests at once")
         return
 
     soup = bs4.BeautifulSoup(res.text, "html.parser")
@@ -51,12 +54,10 @@ def get_anime_info(link):
                        'Type': soup.select("div > a")[15].text,
                        'Episodes': [int(s) for s in soup.select("div.spaceit")[0].text.split() if s.isdigit()][0],
                        'Status': soup.find_all(text=re.compile(r'\b(?:%s)\b' % '|'.join(['Currently Airing',
-                                                                                         'Finished Airing'])))[
-                           0].strip(),
+                                                                                         'Finished Airing'])))[0].strip(),
                        'Aired': " ".join(soup.select("div.spaceit")[1].text.strip().split(" ")[2:]),
-                       'Source': " ".join(soup.select("div.spaceit")[3].text if ("Source:" in soup.select(
-                           "div.spaceit")[
-                           3].text) else soup.select("div.spaceit")[4].text.strip().split(" ")[2:]),
+                       'Source': " ".join(soup.select("div.spaceit")[3].text.split() if ("Source:" in soup.select(
+                           "div.spaceit")[3].text) else soup.select("div.spaceit")[4].text.split()),
                        'Genres': soup.select("div")[soup.select("div").index(soup.select("div.spaceit")[3] if (
                            "Source:" in
                            soup.select
@@ -75,7 +76,7 @@ def get_anime_info(link):
     print(anime_info_dict['Genres'])
     print(anime_info_dict['Duration'])
 
-    return anime_info_dict['Name'], anime_info_dict, link
+    return anime_info_dict['Name'], synopsis, anime_info_dict, link
 
 
 def main():
@@ -86,9 +87,11 @@ def main():
         title = '_'.join(map(str, title))
         print("Searching for anime links on MAL...")
         anime_links = get_anime_links(title)
-        print('First Link: ' + anime_links[0])
-        get_anime_info(anime_links[0])
-        sleep(5)
+
+        for index, link in enumerate(anime_links):
+            print("Checking Link #{}".format(index))
+            get_anime_info(link)
+            sleep(5)
 
 
 if __name__ == '__main__':
