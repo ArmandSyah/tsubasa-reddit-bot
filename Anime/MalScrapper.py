@@ -3,6 +3,7 @@ import bs4
 import sys
 import re
 from time import sleep
+import config
 
 
 def get_anime_links(title):
@@ -39,9 +40,10 @@ def get_anime_info(link):
     try:
         res = requests.get(link)
         res.raise_for_status()
-    except requests.exceptions.RequestException:
+    except requests.exceptions.RequestException as request_error:
         print("Failed to connect to url")
-        return
+        print(request_error)
+        sys.exit(1)
 
     soup = bs4.BeautifulSoup(res.text, "html.parser")
     synopsis = " ".join(soup.find(itemprop='description').get_text().split(" "))
@@ -73,13 +75,15 @@ def anilist_link_maker(title):
     """
 
     title = "%20".join(title.split(" "))
-    client_info = {'grant_type': 'client_credentials',
-                   'client_id': '',
-                   'client_secret': ''}
+
+    # Client info to be use to gain access to AniList API. All fields are hidden in a config.py file
+    anilist_client_info = {'grant_type': config.grant_type,
+                           'client_id': config.client_id,
+                           'client_secret': config.client_secret}
 
     # Make a POST Request to anilist, returning back an access token for the GET requests
     try:
-        post_anilist = requests.post('https://anilist.co/api/auth/access_token', data=client_info)
+        post_anilist = requests.post('https://anilist.co/api/auth/access_token', data=anilist_client_info)
         access_data = post_anilist.json()
     except requests.exceptions.RequestException:
         print("Failed to make the post request, returning")
