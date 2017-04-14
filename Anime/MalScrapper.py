@@ -74,8 +74,8 @@ def anilist_link_maker(title):
 
     title = "%20".join(title.split(" "))
     client_info = {'grant_type': 'client_credentials',
-                   'client_id': 'my-id',
-                   'client_secret': 'my-secret'}
+                   'client_id': '',
+                   'client_secret': ''}
 
     # Make a POST Request to anilist, returning back an access token for the GET requests
     try:
