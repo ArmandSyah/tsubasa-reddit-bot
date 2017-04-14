@@ -4,6 +4,8 @@ import sys
 import re
 from time import sleep
 import config
+import json
+import pprint
 
 
 def get_anime_links(title):
@@ -19,7 +21,6 @@ def get_anime_links(title):
     try:
         res = requests.get(search_url)
         res.raise_for_status()
-        print(res)
     except requests.exceptions.RequestException:
         print("No such link {} found, exiting program".format(search_url))
         sys.exit(1)
@@ -74,7 +75,7 @@ def anilist_link_maker(title):
     :return: An AniList link to the anime
     """
 
-    title = "%20".join(title.split(" "))
+    title_url = "%20".join(title.split(" ")[:-1] if (title.split(" ").pop().startswith('(')) else title.split(" "))
 
     # Client info to be use to gain access to AniList API. All fields are hidden in a config.py file
     anilist_client_info = {'grant_type': config.grant_type,
@@ -84,34 +85,47 @@ def anilist_link_maker(title):
     # Make a POST Request to anilist, returning back an access token for the GET requests
     try:
         post_anilist = requests.post('https://anilist.co/api/auth/access_token', data=anilist_client_info)
+        post_anilist.raise_for_status()
         access_data = post_anilist.json()
     except requests.exceptions.RequestException:
         print("Failed to make the post request, returning")
         return
 
+    anilist_url = 'https://anilist.co/api/anime/search/{0}?access_token={1}'.format(title_url, access_data['access_token'])
+
     # Make a GET Request to anilist, to get info on specific anime show
     try:
-        anilist_url = 'https://anilist.co/api/anime/search/{0}?access_token={1}'.format(title, access_data['access_token'])
         get_anilist_anime = requests.get(anilist_url)
-        show_info = get_anilist_anime.json()[0]
+        get_anilist_anime.raise_for_status()
+        anilist_show_json = json.loads(get_anilist_anime.text)
     except requests.exceptions.RequestException:
         print("Failed to make Get Request")
         return
 
+    show_info = None
+    for show in anilist_show_json:
+        print(show["synonyms"])
+        if show["title_romaji"] == title or title in show["synonyms"]:
+            show_info = show
+            break
+    if show_info is None:
+        return
+
+    anilist_anime_page = 'https://anilist.co/anime/{0}'.format(show_info['id'])
     # Construct a link to the anime's anilist page, and test to see if it works before returning it
     try:
-        anilist_anime_page = 'https://anilist.co/anime/{0}/{1}'.format(show_info['id'], "".join(show_info['title_romaji'].split(" ")))
         test_link = requests.get(anilist_anime_page)
         test_link.raise_for_status()
-        return anilist_anime_page
     except requests.exceptions.RequestException:
         print("Failed to make the last Request")
         return
 
+    return anilist_anime_page
+
 
 def main():
     """
-    Main to be used for testing out this specific module
+    Main to be used for testing out this specific module directly
     :return: 
     """
     while True:
