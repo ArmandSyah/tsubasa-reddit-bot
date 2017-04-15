@@ -151,10 +151,8 @@ def anilist_link_maker(title):
 
     if show_info is None:
         for show in anilist_show_json_alt:
-            show_synonyms = set(show['synonyms'])
-            print(show_synonyms)
 
-            if len([t for t in title['Synonyms'] if t in show_synonyms]) > 0:
+            if len([t for t in title['Synonyms'] if t in show['synonyms']]) > 0:
                 show_info = show
                 break
 
