@@ -54,8 +54,8 @@ def get_anime_info(link):
                                                     (text=re.compile(r'^English.*'))[0].string.parent.parent.text.strip().split(" ")[1:])
                                 if len(soup.find_all(text=re.compile(r'^English.*'))) > 0 else None,
                                 'Synonyms': (" ".join(soup.find_all
-                                                     (text=re.compile(r'^Synonyms.*'))[0].string.parent.parent.text.strip().split(" ")[1:])
-                                if len((soup.find_all(text=re.compile(r'^Synonyms.*')))) > 0 else '').split(', '),
+                                                      (text=re.compile(r'^Synonyms.*'))[0].string.parent.parent.text.strip().split(" ")[1:])
+                                             if len((soup.find_all(text=re.compile(r'^Synonyms.*')))) > 0 else '').split(', '),
                                 'Japanese': " ".join(soup.find_all
                                                      (text=re.compile(r'^Japanese.*'))[0].string.parent.parent.text.strip().split(" ")[1:])
                                 if len(soup.find_all(text=re.compile(r'^Japanese.*'))) > 0 else None},
@@ -113,11 +113,33 @@ def anilist_link_maker(title):
         print("Failed to make Get Request")
         return
 
+    if 'error' in anilist_show_json:
+        print("This entry probably doesn't exist on AniListDB")
+        return
+
     show_info = None
     for show in anilist_show_json:
-        if show["title_romaji"] == title['Main'] or show["title"]:
+        if show["title_japanese"] == title['Japanese']:
             show_info = show
             break
+
+        if len([t for t in title['Synonyms'] if t in show['synonyms']]) > 0:
+            show_info = show
+            break
+
+        if (title['Main'] in show['synonyms']or
+                    title['English'] in show['synonyms']):
+            show_info = show
+            break
+
+        if (t == show['title_english'] for t in title['Synonyms']):
+            show_info = show
+            break
+
+        if show["title_romaji"] == title['Main']:
+            show_info = show
+            break
+
     if show_info is None:
         return
 
@@ -162,10 +184,10 @@ def main():
 
             print("\nNow just wait...")
             sleep(5)
-            '''anilist_page = anilist_link_maker(anime_name)
+            anilist_page = anilist_link_maker(anime_name)
             print("Anilist Link: {}".format(anilist_page))
             print("\nWait again...")
-            sleep(5)'''
+            sleep(5)
 
 
 if __name__ == '__main__':
