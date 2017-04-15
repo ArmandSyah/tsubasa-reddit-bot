@@ -53,13 +53,12 @@ def get_anime_info(link):
                                 'English': " ".join(soup.find_all
                                                     (text=re.compile(r'^English.*'))[0].string.parent.parent.text.strip().split(" ")[1:])
                                 if len(soup.find_all(text=re.compile(r'^English.*'))) > 0 else None,
-                                'Synonyms': " ".join(soup.find_all
+                                'Synonyms': (" ".join(soup.find_all
                                                      (text=re.compile(r'^Synonyms.*'))[0].string.parent.parent.text.strip().split(" ")[1:])
-                                if len((soup.find_all(text=re.compile(r'^Synonyms.*')))) > 0 else None,
+                                if len((soup.find_all(text=re.compile(r'^Synonyms.*')))) > 0 else '').split(', '),
                                 'Japanese': " ".join(soup.find_all
-                                                     (text=re.compile(r'^Japanese.*'))[0].string.parent.parent.text.strip().split(" ")[
-                                                     1:])}
-                                if len(soup.find_all(text=re.compile(r'^Japanese.*'))) > 0 else None,
+                                                     (text=re.compile(r'^Japanese.*'))[0].string.parent.parent.text.strip().split(" ")[1:])
+                                if len(soup.find_all(text=re.compile(r'^Japanese.*'))) > 0 else None},
                        'Type': soup.select("div > a")[15].text,
                        'Episodes': [int(s) for s in soup.select("div.spaceit")[0].text.split() if s.isdigit()][0],
                        'Status': soup.find_all(text=re.compile(r'\b(?:%s)\b' % '|'.join(['Currently Airing',
@@ -150,14 +149,16 @@ def main():
         for index, link in enumerate(anime_links):
             print("\nChecking Link #{}".format(index + 1))
             anime_name, anime_synopsis, anime_info_dict, link = get_anime_info(link)
-            '''pp.pprint("Name: {}".format(anime_name))
+
+            for key, value in anime_name.items():
+                print(f'{key} : {value}')
+
             print("Synopsis: {}".format(anime_synopsis))
 
             for key, value in anime_info_dict.items():
-                pp.pprint("{0}: {1}".format(key, value))'''
-
-            for key, value in anime_name.items():
-                pp.pprint(f'{key} : {value}')
+                if key is 'Name':
+                    continue
+                pp.pprint("{0}: {1}".format(key, value))
 
             print("\nNow just wait...")
             sleep(5)
