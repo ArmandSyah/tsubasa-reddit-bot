@@ -81,11 +81,12 @@ def get_anime_info(link):
 def anilist_link_maker(title):
     """
     Takes a title parameter and finds the anilist page for the specific anime
-    :param title: Full title of anime to search for
+    :param title: Name entry from anime_info_dict dictionary, in the form 
+                 {'Main': name, 'English': name, 'Synonyms': [list of names], 'Japanese': name}
     :return: An AniList link to the anime
     """
 
-    title_url = "%20".join(title.split(" ")[:-1] if (title.split(" ").pop().startswith('(')) else title.split(" "))
+    title_url = "%20".join(title['Main'].split(" ")[:-1] if (title['Main'].split(" ").pop().startswith('(')) else title['Main'].split(" "))
 
     # Client info to be use to gain access to AniList API. All fields are hidden in a config.py file
     anilist_client_info = {'grant_type': config.grant_type,
@@ -114,8 +115,7 @@ def anilist_link_maker(title):
 
     show_info = None
     for show in anilist_show_json:
-        print(show["synonyms"])
-        if show["title_romaji"] == title or title in show["synonyms"]:
+        if show["title_romaji"] == title['Main'] or show["title"]:
             show_info = show
             break
     if show_info is None:
