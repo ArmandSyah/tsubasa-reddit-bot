@@ -51,11 +51,15 @@ def get_anime_info(link):
 
     anime_info_dict = {'Name': {'Main': soup.select("h1.h1")[0].text.strip(),
                                 'English': " ".join(soup.find_all
-                                                    (text=re.compile(r'^English.*'))[0].string.parent.parent.text.strip().split(" ")[1:]),
+                                                    (text=re.compile(r'^English.*'))[0].string.parent.parent.text.strip().split(" ")[1:])
+                                if len(soup.find_all(text=re.compile(r'^English.*'))) > 0 else None,
                                 'Synonyms': " ".join(soup.find_all
-                                                     (text=re.compile(r'^Synonyms.*'))[0].string.parent.parent.text.strip().split(" ")[1:]),
+                                                     (text=re.compile(r'^Synonyms.*'))[0].string.parent.parent.text.strip().split(" ")[1:])
+                                if len((soup.find_all(text=re.compile(r'^Synonyms.*')))) > 0 else None,
                                 'Japanese': " ".join(soup.find_all
-                                                     (text=re.compile(r'^Japanese.*'))[0].string.parent.parent.text.strip().split(" ")[1:])},
+                                                     (text=re.compile(r'^Japanese.*'))[0].string.parent.parent.text.strip().split(" ")[
+                                                     1:])}
+                                if len(soup.find_all(text=re.compile(r'^Japanese.*'))) > 0 else None,
                        'Type': soup.select("div > a")[15].text,
                        'Episodes': [int(s) for s in soup.select("div.spaceit")[0].text.split() if s.isdigit()][0],
                        'Status': soup.find_all(text=re.compile(r'\b(?:%s)\b' % '|'.join(['Currently Airing',
