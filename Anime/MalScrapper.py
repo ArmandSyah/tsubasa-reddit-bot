@@ -49,11 +49,18 @@ def get_anime_info(link):
     soup = bs4.BeautifulSoup(res.text, "html.parser")
     synopsis = " ".join(soup.find(itemprop='description').get_text().split(" "))
 
-    anime_info_dict = {'Name': soup.select("h1.h1")[0].text,
+    anime_info_dict = {'Name': {'Main': soup.select("h1.h1")[0].text.strip(),
+                                'English': " ".join(soup.find_all
+                                                    (text=re.compile(r'^English.*'))[0].string.parent.parent.text.strip().split(" ")[1:]),
+                                'Synonyms': " ".join(soup.find_all
+                                                     (text=re.compile(r'^Synonyms.*'))[0].string.parent.parent.text.strip().split(" ")[1:]),
+                                'Japanese': " ".join(soup.find_all
+                                                     (text=re.compile(r'^Japanese.*'))[0].string.parent.parent.text.strip().split(" ")[1:])},
                        'Type': soup.select("div > a")[15].text,
                        'Episodes': [int(s) for s in soup.select("div.spaceit")[0].text.split() if s.isdigit()][0],
                        'Status': soup.find_all(text=re.compile(r'\b(?:%s)\b' % '|'.join(['Currently Airing',
-                                                                                         'Finished Airing'])))[0].strip(),
+                                                                                         'Finished Airing',
+                                                                                         'Not yet aired'])))[0].strip(),
                        'Aired': " ".join(soup.select("div.spaceit")[1].text.strip().split(" ")[2:]),
                        'Source': " ".join(soup.select("div.spaceit")[3].text.split() if ("Source:" in soup.select(
                            "div.spaceit")[3].text) else soup.select("div.spaceit")[4].text.split()).split(" ")[1],
@@ -128,6 +135,7 @@ def main():
     Main to be used for testing out this specific module directly
     :return: 
     """
+    pp = pprint.PrettyPrinter(indent=4)
     while True:
         print("What show are you looking up: ")
         title = str(input()).split(" ")
@@ -138,18 +146,21 @@ def main():
         for index, link in enumerate(anime_links):
             print("\nChecking Link #{}".format(index + 1))
             anime_name, anime_synopsis, anime_info_dict, link = get_anime_info(link)
-            print("Name: {}".format(anime_name))
+            '''pp.pprint("Name: {}".format(anime_name))
             print("Synopsis: {}".format(anime_synopsis))
 
             for key, value in anime_info_dict.items():
-                print("{0}: {1}".format(key, value))
+                pp.pprint("{0}: {1}".format(key, value))'''
+
+            for key, value in anime_name.items():
+                pp.pprint(f'{key} : {value}')
 
             print("\nNow just wait...")
             sleep(5)
-            anilist_page = anilist_link_maker(anime_name)
+            '''anilist_page = anilist_link_maker(anime_name)
             print("Anilist Link: {}".format(anilist_page))
             print("\nWait again...")
-            sleep(5)
+            sleep(5)'''
 
 
 if __name__ == '__main__':
