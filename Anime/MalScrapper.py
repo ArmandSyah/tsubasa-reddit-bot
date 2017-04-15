@@ -26,7 +26,7 @@ def get_anime_links(title):
         sys.exit(1)
 
     soup = bs4.BeautifulSoup(res.text, "html.parser")
-    links = [element.get("href") for element in soup.select("a.hoverinfo_trigger.fw-b.fl-l", limit=3)]
+    links = [element.get("href") for element in soup.select("a.hoverinfo_trigger.fw-b.fl-l", limit=5)]
     print(links)
 
     return links
@@ -86,7 +86,8 @@ def anilist_link_maker(title):
     :return: An AniList link to the anime
     """
 
-    title_url = "%20".join(title['Main'].split(" ")[:-1] if (title['Main'].split(" ").pop().startswith('(')) else title['Main'].split(" "))
+    title_url = "%20".join(title['Synonyms'][0].split(" "))
+    title_url_alt = "%20".join(title['Main'].split(" "))
 
     # Client info to be use to gain access to AniList API. All fields are hidden in a config.py file
     anilist_client_info = {'grant_type': config.grant_type,
@@ -103,24 +104,28 @@ def anilist_link_maker(title):
         return
 
     anilist_url = 'https://anilist.co/api/anime/search/{0}?access_token={1}'.format(title_url, access_data['access_token'])
+    anilist_url_alt = 'https://anilist.co/api/anime/search/{0}?access_token={1}'.format(title_url_alt, access_data['access_token'])
 
     # Make a GET Request to anilist, to get info on specific anime show
     try:
         get_anilist_anime = requests.get(anilist_url)
+        get_anilist_anime_alt = requests.get(anilist_url_alt)
         get_anilist_anime.raise_for_status()
+        get_anilist_anime_alt.raise_for_status()
         anilist_show_json = json.loads(get_anilist_anime.text)
+        anilist_show_json_alt = json.loads(get_anilist_anime_alt.text)
     except requests.exceptions.RequestException:
         print("Failed to make Get Request")
         return
 
-    if 'error' in anilist_show_json:
+    if 'error' in anilist_show_json and 'error' in anilist_show_json_alt:
         print("This entry probably doesn't exist on AniListDB")
         return
 
     show_info = None
     for show in anilist_show_json:
-        if show["title_japanese"] == title['Japanese']:
-            show_info = show
+
+        if 'error' in anilist_show_json:
             break
 
         if len([t for t in title['Synonyms'] if t in show['synonyms']]) > 0:
@@ -136,9 +141,39 @@ def anilist_link_maker(title):
             show_info = show
             break
 
-        if show["title_romaji"] == title['Main']:
+        if title['Main'] == show["title_romaji"]:
             show_info = show
             break
+
+        if title['Japanese'] == show["title_japanese"]:
+            show_info = show
+            break
+
+    if show_info is None:
+        for show in anilist_show_json_alt:
+            show_synonyms = set(show['synonyms'])
+            print(show_synonyms)
+
+            if len([t for t in title['Synonyms'] if t in show_synonyms]) > 0:
+                show_info = show
+                break
+
+            if (title['Main'] in show['synonyms'] or
+                        title['English'] in show['synonyms']):
+                show_info = show
+                break
+
+            if (t == show['title_english'] for t in title['Synonyms']):
+                show_info = show
+                break
+
+            if title['Main'] == show["title_romaji"]:
+                show_info = show
+                break
+
+            if title['Japanese'] == show["title_japanese"]:
+                show_info = show
+                break
 
     if show_info is None:
         return
