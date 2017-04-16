@@ -86,8 +86,8 @@ def anilist_link_maker(title):
     :return: An AniList link to the anime
     """
 
-    title_url = "%20".join(title['Synonyms'][0].split(" "))
-    title_url_alt = "%20".join(title['Main'].split(" "))
+    title_url = "%20".join(title['Main'].split(" "))
+    title_url_alt = "%20".join(title['Synonyms'][0].split(" "))
 
     # Client info to be use to gain access to AniList API. All fields are hidden in a config.py file
     anilist_client_info = {'grant_type': config.grant_type,
@@ -107,8 +107,10 @@ def anilist_link_maker(title):
     anilist_url_alt = 'https://anilist.co/api/anime/search/{0}?access_token={1}'.format(title_url_alt, access_data['access_token'])
 
     # Make a GET Request to anilist, to get info on specific anime show
+    print(anilist_url)
     show_info = anilist_json_request(anilist_url, title)
     if show_info is None:
+        print(anilist_url_alt)
         show_info = anilist_json_request(anilist_url_alt, title)
 
     if show_info is None:
@@ -140,12 +142,11 @@ def anilist_json_request(anilist_url, title):
         return
 
     for show in anilist_show_json:
-        if (len([t for t in title['Synonyms'] if t in show['synonyms']]) > 0 or
-                title['Main'] in show['synonyms'] or
-                    title['English'] in show['synonyms'] or
-                        t == show['title_english'] for t in title['Synonyms'] or
-                            title['Main'] == show["title_romaji"] or
-                                title['Japanese'] == show["title_japanese"]):
+        if ((t == title['Main'] for t in show['synonyms']) or
+                (t == title['English'] for t in show['synonyms']) or
+                    (t == show['title_english'] for t in title['Synonyms']) or
+                        title['Main'] == show["title_romaji"] or
+                            title['Japanese'] == show["title_japanese"]):
             return show
 
     return
