@@ -60,7 +60,7 @@ def get_anime_info(link):
                                                      (text=re.compile(r'^Japanese.*'))[0].string.parent.parent.text.strip().split(" ")[1:])
                                 if len(soup.find_all(text=re.compile(r'^Japanese.*'))) > 0 else None},
                        'Type': soup.select("div > a")[15].text,
-                       'Episodes': [int(s) for s in soup.select("div.spaceit")[0].text.split() if s.isdigit()][0],
+                       'Episodes': [s for s in soup.select("div.spaceit")[0].text.split()][1],
                        'Status': soup.find_all(text=re.compile(r'\b(?:%s)\b' % '|'.join(['Currently Airing',
                                                                                          'Finished Airing',
                                                                                          'Not yet aired'])))[0].strip(),
@@ -107,71 +107,9 @@ def anilist_link_maker(title):
     anilist_url_alt = 'https://anilist.co/api/anime/search/{0}?access_token={1}'.format(title_url_alt, access_data['access_token'])
 
     # Make a GET Request to anilist, to get info on specific anime show
-    try:
-        get_anilist_anime = requests.get(anilist_url)
-        get_anilist_anime_alt = requests.get(anilist_url_alt)
-        get_anilist_anime.raise_for_status()
-        get_anilist_anime_alt.raise_for_status()
-        anilist_show_json = json.loads(get_anilist_anime.text)
-        anilist_show_json_alt = json.loads(get_anilist_anime_alt.text)
-    except requests.exceptions.RequestException:
-        print("Failed to make Get Request")
-        return
-
-    if 'error' in anilist_show_json and 'error' in anilist_show_json_alt:
-        print("This entry probably doesn't exist on AniListDB")
-        return
-
-    show_info = None
-    for show in anilist_show_json:
-
-        if 'error' in anilist_show_json:
-            break
-
-        if len([t for t in title['Synonyms'] if t in show['synonyms']]) > 0:
-            show_info = show
-            break
-
-        if (title['Main'] in show['synonyms']or
-                    title['English'] in show['synonyms']):
-            show_info = show
-            break
-
-        if (t == show['title_english'] for t in title['Synonyms']):
-            show_info = show
-            break
-
-        if title['Main'] == show["title_romaji"]:
-            show_info = show
-            break
-
-        if title['Japanese'] == show["title_japanese"]:
-            show_info = show
-            break
-
+    show_info = anilist_json_request(anilist_url, title)
     if show_info is None:
-        for show in anilist_show_json_alt:
-
-            if len([t for t in title['Synonyms'] if t in show['synonyms']]) > 0:
-                show_info = show
-                break
-
-            if (title['Main'] in show['synonyms'] or
-                        title['English'] in show['synonyms']):
-                show_info = show
-                break
-
-            if (t == show['title_english'] for t in title['Synonyms']):
-                show_info = show
-                break
-
-            if title['Main'] == show["title_romaji"]:
-                show_info = show
-                break
-
-            if title['Japanese'] == show["title_japanese"]:
-                show_info = show
-                break
+        show_info = anilist_json_request(anilist_url_alt, title)
 
     if show_info is None:
         return
@@ -186,6 +124,39 @@ def anilist_link_maker(title):
         return
 
     return anilist_anime_page
+
+
+def anilist_json_request(anilist_url, title):
+    try:
+        get_anilist_anime = requests.get(anilist_url)
+        get_anilist_anime.raise_for_status()
+        anilist_show_json = json.loads(get_anilist_anime.text)
+    except requests.exceptions.RequestException:
+        print("Failed to make Get Request")
+        return
+
+    if 'error' in anilist_show_json:
+        print("Could not find this particular entry")
+        return
+
+    for show in anilist_show_json:
+        if len([t for t in title['Synonyms'] if t in show['synonyms']]) > 0:
+            return show
+
+        if (title['Main'] in show['synonyms']or
+                    title['English'] in show['synonyms']):
+            return show
+
+        if (t == show['title_english'] for t in title['Synonyms']):
+            return show
+
+        if title['Main'] == show["title_romaji"]:
+            return show
+
+        if title['Japanese'] == show["title_japanese"]:
+            return show
+
+    return
 
 
 def main():
