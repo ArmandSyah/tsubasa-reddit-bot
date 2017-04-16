@@ -140,20 +140,12 @@ def anilist_json_request(anilist_url, title):
         return
 
     for show in anilist_show_json:
-        if len([t for t in title['Synonyms'] if t in show['synonyms']]) > 0:
-            return show
-
-        if (title['Main'] in show['synonyms']or
-                    title['English'] in show['synonyms']):
-            return show
-
-        if (t == show['title_english'] for t in title['Synonyms']):
-            return show
-
-        if title['Main'] == show["title_romaji"]:
-            return show
-
-        if title['Japanese'] == show["title_japanese"]:
+        if (len([t for t in title['Synonyms'] if t in show['synonyms']]) > 0 or
+                title['Main'] in show['synonyms'] or
+                    title['English'] in show['synonyms'] or
+                        t == show['title_english'] for t in title['Synonyms'] or
+                            title['Main'] == show["title_romaji"] or
+                                title['Japanese'] == show["title_japanese"]):
             return show
 
     return
