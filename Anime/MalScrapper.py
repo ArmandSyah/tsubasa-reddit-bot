@@ -107,11 +107,10 @@ def anilist_link_maker(title):
     anilist_url_alt = 'https://anilist.co/api/anime/search/{0}?access_token={1}'.format(title_url_alt, access_data['access_token'])
 
     # Make a GET Request to anilist, to get info on specific anime show
-    print(anilist_url)
-    show_info = anilist_json_request(anilist_url, title)
-    if show_info is None:
-        print(anilist_url_alt)
-        show_info = anilist_json_request(anilist_url_alt, title)
+    urllist = [anilist_url_alt, anilist_url]
+    show_info = ""
+    while (show_info == "") and (len(urllist) > 0):
+        show_info = anilist_json_request(urllist.pop(), title)
 
     if show_info is None:
         return
