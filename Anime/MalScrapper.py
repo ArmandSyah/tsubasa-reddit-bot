@@ -7,9 +7,9 @@ import config
 import json
 import pprint
 
-import logging
+'''import logging
 logging.basicConfig(level=logging.DEBUG, format=' %(asctime)s - %(levelname)s- %(message)s')
-logging.debug('Start of program')
+logging.debug('Start of program')'''
 
 
 def get_anime_links(title):
@@ -133,8 +133,6 @@ def anilist_link_maker(title):
 
 def anilist_json_request(anilist_url, title):
 
-    logging.debug('Entered anilist_json_request function')
-
     try:
         get_anilist_anime = requests.get(anilist_url)
         get_anilist_anime.raise_for_status()
@@ -148,23 +146,16 @@ def anilist_json_request(anilist_url, title):
         return
 
     for index, show in enumerate(anilist_show_json):
-        logging.debug('At index {}'.format(index))
-
         if True in [t == title['Main'] for t in show['synonyms']]:
-            logging.debug('Found main title in synonyms')
-            logging.debug(list(t == title['Main'] for t in show['synonyms']))
             return show
 
         if True in [t == title['English'] for t in show['synonyms']]:
-            logging.debug('Found english title in synonyms')
             return show
 
         if title['Main'] == show["title_romaji"]:
-            logging.debug('Main is the same as anilist romanji')
             return show
 
         if title['Japanese'] == show["title_japanese"]:
-            logging.debug('Japanese is the same as anilist japanese')
             return show
 
     return
