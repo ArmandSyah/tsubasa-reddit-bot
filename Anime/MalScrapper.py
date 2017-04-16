@@ -119,7 +119,7 @@ def anilist_link_maker(title):
     if show_info is None:
         return
 
-    anilist_anime_page = 'https://anilist.co/anime/{0}'.format(show_info['id'])
+    anilist_anime_page = f'https://anilist.co/anime/{show_info["id"]}'
     # Construct a link to the anime's anilist page, and test to see if it works before returning it
     try:
         test_link = requests.get(anilist_anime_page)
@@ -145,7 +145,7 @@ def anilist_json_request(anilist_url, title):
         print("Could not find this particular entry")
         return
 
-    for index, show in enumerate(anilist_show_json):
+    for show in anilist_show_json:
         if True in [t == title['Main'] for t in show['synonyms']]:
             return show
 
@@ -179,7 +179,7 @@ def main():
             anime_name, anime_synopsis, anime_info_dict, link = get_anime_info(link)
 
             for key, value in anime_name.items():
-                print(f'{key} : {value}')
+                pp.pprint(f'{key} : {value}')
 
             print("Synopsis: {}".format(anime_synopsis))
 
