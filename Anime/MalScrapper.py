@@ -2,10 +2,10 @@ import requests
 import bs4
 import sys
 import re
-from time import sleep
 import config
 import json
 import pprint
+from time import sleep
 
 '''import logging
 logging.basicConfig(level=logging.DEBUG, format=' %(asctime)s - %(levelname)s- %(message)s')
