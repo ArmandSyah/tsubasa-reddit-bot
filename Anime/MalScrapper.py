@@ -112,8 +112,8 @@ def anilist_link_maker(title):
 
     # Make a GET Request to anilist, to get info on specific anime show
     urllist = [anilist_url_alt, anilist_url]
-    show_info = ""
-    while (show_info == "") and (len(urllist) > 0):
+    show_info = None
+    while (show_info is None) and (len(urllist) > 0):
         show_info = anilist_json_request(urllist.pop(), title)
 
     if show_info is None:
@@ -158,6 +158,9 @@ def anilist_json_request(anilist_url, title):
             return show
 
         if True in [t == title['English'] for t in show['synonyms']]:
+            return show
+
+        if True in [t == show['title_english'] for t in title['Synonyms']]:
             return show
 
         if title['Main'] == show["title_romaji"]:
