@@ -2,10 +2,10 @@ import requests
 import bs4
 import sys
 import re
-from time import sleep
 import config
 import json
 import pprint
+from time import sleep
 
 '''import logging
 logging.basicConfig(level=logging.DEBUG, format=' %(asctime)s - %(levelname)s- %(message)s')
@@ -19,14 +19,14 @@ def get_anime_links(title):
     :return: 
     """
 
-    search_url = "https://myanimelist.net/anime.php?q={}".format(title)
+    search_url = f"https://myanimelist.net/anime.php?q={title}"
     print(search_url)
 
     try:
         res = requests.get(search_url)
         res.raise_for_status()
     except requests.exceptions.RequestException:
-        print("No such link {} found, exiting program".format(search_url))
+        print(f"No such link {search_url} found, exiting program")
         sys.exit(1)
 
     soup = bs4.BeautifulSoup(res.text, "html.parser")
@@ -112,14 +112,15 @@ def anilist_link_maker(title):
 
     # Make a GET Request to anilist, to get info on specific anime show
     urllist = [anilist_url_alt, anilist_url]
-    show_info = ""
-    while (show_info == "") and (len(urllist) > 0):
+    show_info = None
+    while (show_info is None) and (len(urllist) > 0):
         show_info = anilist_json_request(urllist.pop(), title)
 
     if show_info is None:
         return
 
     anilist_anime_page = f'https://anilist.co/anime/{show_info["id"]}'
+
     # Construct a link to the anime's anilist page, and test to see if it works before returning it
     try:
         test_link = requests.get(anilist_anime_page)
@@ -132,6 +133,13 @@ def anilist_link_maker(title):
 
 
 def anilist_json_request(anilist_url, title):
+    """
+    Pull JSON data from AniList.co for the requested show
+    :param anilist_url: GET request url, obtaining anime show info from AniList API
+    :param title: Name entry from anime_info_dict dictionary, in the form 
+                 {'Main': name, 'English': name, 'Synonyms': [list of names], 'Japanese': name}
+    :return: JSON data for 
+    """
 
     try:
         get_anilist_anime = requests.get(anilist_url)
@@ -150,6 +158,9 @@ def anilist_json_request(anilist_url, title):
             return show
 
         if True in [t == title['English'] for t in show['synonyms']]:
+            return show
+
+        if True in [t == show['title_english'] for t in title['Synonyms']]:
             return show
 
         if title['Main'] == show["title_romaji"]:
@@ -175,23 +186,23 @@ def main():
         anime_links = get_anime_links(title)
 
         for index, link in enumerate(anime_links):
-            print("\nChecking Link #{}".format(index + 1))
+            print(f"\nChecking Link #{index + 1}")
             anime_name, anime_synopsis, anime_info_dict, link = get_anime_info(link)
 
             for key, value in anime_name.items():
                 pp.pprint(f'{key} : {value}')
 
-            print("Synopsis: {}".format(anime_synopsis))
+            print(f"Synopsis: {anime_synopsis}")
 
             for key, value in anime_info_dict.items():
                 if key is 'Name':
                     continue
-                pp.pprint("{0}: {1}".format(key, value))
+                pp.pprint(f"{key}: {value}")
 
             print("\nNow just wait...")
             sleep(5)
             anilist_page = anilist_link_maker(anime_name)
-            print("Anilist Link: {}".format(anilist_page))
+            print(f"Anilist Link: {anilist_page}")
             print("\nWait again...")
             sleep(5)
 
