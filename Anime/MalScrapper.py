@@ -12,6 +12,61 @@ logging.basicConfig(level=logging.DEBUG, format=' %(asctime)s - %(levelname)s- %
 logging.debug('Start of program')'''
 
 
+class MALAnimeInfo(object):
+
+    def __init__(self, url):
+        self.url = url
+
+    @staticmethod
+    def _soup_maker(url):
+        """Create BeautifulSoup Object to parse HTML easily"""
+        try:
+            res = requests.get(url)
+            res.raise_for_status()
+        except requests.exceptions.RequestException as request_error:
+            print("Failed to connect to url")
+            print(request_error)
+            sys.exit(1)
+        return bs4.BeautifulSoup(res.text, "html.parser")
+
+    def get_synopsis(self):
+        """Get Synopsis of anime from MAL anime page"""
+        soup = MALAnimeInfo._soup_maker(self.url)
+        synopsis = " ".join(soup.find(itemprop='description').get_text().split(" "))
+        return synopsis
+
+    def get_names(self):
+        """Get the different names of the anime from MAL anime page"""
+        soup = MALAnimeInfo._soup_maker(self.url)
+        main_name = soup.select("h1.h1")[0].text.strip()
+        english_name = (" ".join(soup.find_all
+                                 (text=re.compile(r'^English.*'))[0].string.parent.parent.text.strip().split(" ")[1:])
+                        if len(soup.find_all(text=re.compile(r'^English.*'))) > 0 else None)
+        synonyms = (" ".join(soup.find_all
+                             (text=re.compile(r'^Synonyms.*'))[0].string.parent.parent.text.strip().split(" ")[1:])
+                    if len((soup.find_all(text=re.compile(r'^Synonyms.*')))) > 0 else '').split(', ')
+        japanese_name = (" ".join(soup.find_all
+                                  (text=re.compile(r'^Japanese.*'))[0].string.parent.parent.text.strip().split(" ")[1:])
+                         if len(soup.find_all(text=re.compile(r'^Japanese.*'))) > 0 else None)
+
+        return {'Main': main_name, 'English': english_name, 'Synonyms': synonyms, 'Japanese': japanese_name}
+
+    def get_type(self):
+        """Get the anime's type from MAL anime page"""
+        soup = MALAnimeInfo._soup_maker(self.url)
+        anime_type = soup.select("div > a")[15].text
+        return anime_type
+
+    def get_number_episodes(self):
+        """Get anime's number of episode from MAL anime page"""
+        soup = MALAnimeInfo._soup_maker(self.url)
+        episodes = [s for s in soup.select("div.spaceit")[0].text.split()][1]
+        return episodes
+
+    def get_status(self):
+        """Get anime's airing status from MAL anime page"""
+
+
 def get_anime_links(title):
     """
     Uses beautiful soup to enter anime into search bar and then extract links of anime pages from the search results
@@ -31,7 +86,6 @@ def get_anime_links(title):
 
     soup = bs4.BeautifulSoup(res.text, "html.parser")
     links = [element.get("href") for element in soup.select("a.hoverinfo_trigger.fw-b.fl-l", limit=5)]
-    print(links)
 
     return links
 
@@ -187,12 +241,13 @@ def main():
 
         for index, link in enumerate(anime_links):
             print(f"\nChecking Link #{index + 1}")
+            anime = MALAnimeInfo(link)
             anime_name, anime_synopsis, anime_info_dict, link = get_anime_info(link)
 
             for key, value in anime_name.items():
                 pp.pprint(f'{key} : {value}')
 
-            print(f"Synopsis: {anime_synopsis}")
+            print(f"Synopsis: {anime.get_synopsis()}")
 
             for key, value in anime_info_dict.items():
                 if key is 'Name':
