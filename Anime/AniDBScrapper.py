@@ -1,7 +1,5 @@
 import requests
-from time import sleep
-import sys
-import datetime
+import os
 
 
 def scrape_anidb():
@@ -10,21 +8,20 @@ def scrape_anidb():
     :return: 
     """
 
+    if os.stat('AniDBTitle.txt').st_size > 0:
+        print('No need to run this script again, let\'s limit the amount of requests')
+        return
+
     anidb_request = None
     while anidb_request is None:
         try:
             anidb_request = requests.get("http://anidb.net/api/anime-titles.dat.gz")
             anidb_request.raise_for_status()
         except requests.exceptions.RequestException:
-            print("Connection refused by the server..")
-            print("Let me sleep for 5 seconds")
-            print("ZZzzzz...")
-            sleep(5)
-            print("Was a nice sleep, now let me continue...")
+            print('Didn\'t work')
             continue
 
-    print(anidb_request.text)
-    with open('AniDBTitle.txt', 'w') as ani:
+    with open('AniDBTitle.txt', 'w', encoding='utf8') as ani:
         ani.write(anidb_request.text)
 
 
