@@ -8,7 +8,7 @@ def scrape_anidb():
     :return: 
     """
 
-    if os.stat('AniDBTitle.txt').st_size > 0:
+    if os.stat('AniDBTitles.txt').st_size > 0:
         print('No need to run this script again, let\'s limit the amount of requests')
         return
 
@@ -21,7 +21,7 @@ def scrape_anidb():
             print('Didn\'t work')
             continue
 
-    with open('AniDBTitle.txt', 'w', encoding='utf8') as ani:
+    with open('AniDBTitles.txt', 'w', encoding='utf8') as ani:
         ani.write(anidb_request.text)
 
 
