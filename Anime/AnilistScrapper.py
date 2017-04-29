@@ -3,16 +3,13 @@ import config
 import json
 
 
-def anilist_link_maker(title):
+def anilist_link_maker(titles):
     """
     Takes a title parameter and finds the anilist page for the specific anime
-    :param title: Name entry from anime_info_dict dictionary, in the form 
+    :param titles: Name entry from anime_info_dict dictionary, in the form 
                  {'Main': name, 'English': name, 'Synonyms': [list of names], 'Japanese': name}
     :return: An AniList link to the anime
     """
-
-    title_slug = "%20".join(title['Main'].split(" "))
-    title_slug_alt = "%20".join(title['Synonyms'][0].split(" "))
 
     # Client info to be use to gain access to AniList API. All fields are hidden in a config.py file
     anilist_client_info = {'grant_type': config.grant_type,
@@ -28,29 +25,44 @@ def anilist_link_maker(title):
         print("Failed to make the post request, returning")
         return
 
-    anilist_url = 'https://anilist.co/api/anime/search/{0}?access_token={1}'.format(title_slug, access_data['access_token'])
-    anilist_url_alt = 'https://anilist.co/api/anime/search/{0}?access_token={1}'.format(title_slug_alt, access_data['access_token'])
+    title_slugs = anilist_slug(titles)
 
-    # Make a GET Request to anilist, to get info on specific anime show
-    urllist = [anilist_url_alt, anilist_url]
-    show_info = None
-    while (show_info is None) and (len(urllist) > 0):
-        show_info = anilist_json_request(urllist.pop(), title)
+    for t in title_slugs:
+        anilist_url = 'https://anilist.co/api/anime/search/{0}?access_token={1}'.format(t, access_data['access_token'])
 
-    if show_info is None:
-        return
+        # Make a GET Request to anilist, to get info on specific anime show
+        show_info = anilist_json_request(anilist_url, titles)
 
-    anilist_anime_page = f'https://anilist.co/anime/{show_info["id"]}'
+        if show_info is None:
+            continue
 
-    # Construct a link to the anime's anilist page, and test to see if it works before returning it
-    try:
-        test_link = requests.get(anilist_anime_page)
-        test_link.raise_for_status()
-    except requests.exceptions.RequestException:
-        print("Failed to make the last Request")
-        return
+        anilist_anime_page = f'https://anilist.co/anime/{show_info["id"]}'
 
-    return anilist_anime_page
+        # Construct a link to the anime's anilist page, and test to see if it works before returning it
+        try:
+            test_link = requests.get(anilist_anime_page)
+            test_link.raise_for_status()
+        except requests.exceptions.RequestException:
+            print("Failed to make the last Request")
+            continue
+
+        return anilist_anime_page
+
+    print("Couldn't find the anilist link")
+    return
+
+
+def anilist_slug(names):
+    """Designs URL slugs in the form of '%20'"""
+    url_slugs = []
+    for _, n in names.items():
+        if type(n) is str:
+            slug = "%20".join(n.split(" "))
+            url_slugs.append(slug)
+        elif type(n) is list:
+            slug_list = ["%20".join(s.split(" ")) for s in n]
+            url_slugs.extend(slug_list)
+    return url_slugs
 
 
 def anilist_json_request(anilist_url, title):
