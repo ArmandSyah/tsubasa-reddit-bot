@@ -25,10 +25,10 @@ def anilist_link_maker(titles):
         print("Failed to make the post request, returning")
         return
 
-    title_slugs = anilist_slug(titles)
+    title_slugs = anilist_slugs(titles)
 
     for t in title_slugs:
-        anilist_url = 'https://anilist.co/api/anime/search/{0}?access_token={1}'.format(t, access_data['access_token'])
+        anilist_url = f'https://anilist.co/api/anime/search/{t}?access_token={access_data["access_token"]}'
 
         # Make a GET Request to anilist, to get info on specific anime show
         show_info = anilist_json_request(anilist_url, titles)
@@ -52,7 +52,7 @@ def anilist_link_maker(titles):
     return
 
 
-def anilist_slug(names):
+def anilist_slugs(names):
     """Designs URL slugs in the form of '%20'"""
     url_slugs = []
     for _, n in names.items():
