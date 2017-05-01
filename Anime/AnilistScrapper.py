@@ -3,6 +3,27 @@ import config
 import json
 
 
+def post_request(url, query_parameters):
+    """Makes an HTTP Post Request"""
+    try:
+        post_data = requests.post(url, data=query_parameters)
+        post_data.raise_for_status()
+    except requests.exceptions.RequestException:
+        print("Failed to make the post request, returning")
+        return
+    return post_data
+
+
+def get_request(url):
+    try:
+        get_data = requests.get(url)
+        get_data.raise_for_status()
+    except requests.exceptions.RequestException:
+        print("Failed to make the last Request")
+        return
+    return get_data
+
+
 def anilist_link_maker(titles):
     """
     Takes a title parameter and finds the anilist page for the specific anime
@@ -17,13 +38,8 @@ def anilist_link_maker(titles):
                            'client_secret': config.client_secret}
 
     # Make a POST Request to anilist, returning back an access token for the GET requests
-    try:
-        post_anilist = requests.post('https://anilist.co/api/auth/access_token', data=anilist_client_info)
-        post_anilist.raise_for_status()
-        access_data = post_anilist.json()
-    except requests.exceptions.RequestException:
-        print("Failed to make the post request, returning")
-        return
+    anilist_post = post_request('https://anilist.co/api/auth/access_token', anilist_client_info)
+    access_data = anilist_post.json()
 
     title_slugs = anilist_slugs(titles)
 
@@ -39,14 +55,11 @@ def anilist_link_maker(titles):
         anilist_anime_page = f'https://anilist.co/anime/{show_info["id"]}'
 
         # Construct a link to the anime's anilist page, and test to see if it works before returning it
-        try:
-            test_link = requests.get(anilist_anime_page)
-            test_link.raise_for_status()
-        except requests.exceptions.RequestException:
-            print("Failed to make the last Request")
+        testing_link = get_request(anilist_anime_page)
+        if testing_link is not None:
+            return anilist_anime_page
+        else:
             continue
-
-        return anilist_anime_page
 
     print("Couldn't find the anilist link")
     return
@@ -74,13 +87,9 @@ def anilist_json_request(anilist_url, title):
     :return: JSON data for 
     """
 
-    try:
-        get_anilist_anime = requests.get(anilist_url)
-        get_anilist_anime.raise_for_status()
-        anilist_show_json = json.loads(get_anilist_anime.text)
-    except requests.exceptions.RequestException:
-        print("Failed to make Get Request")
-        return
+    get_anilist_anime = get_request(anilist_url)
+
+    anilist_show_json = json.loads(get_anilist_anime.text)
 
     if 'error' in anilist_show_json:
         print("Could not find this particular entry")
