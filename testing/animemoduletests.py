@@ -1,6 +1,7 @@
 import pprint
 import unittest
-from anime import malscrapper, anidbscrapper, anilistscrapper, streamscrapper
+
+from anime.malinfo import malscrapper
 
 
 class TestMalScrapper(unittest.TestCase):

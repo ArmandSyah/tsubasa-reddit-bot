@@ -1,6 +1,8 @@
-import requests
 import json
-from anime import anilistconfig
+
+import requests
+
+from anime.anilistinfo import anilistconfig
 
 
 def get_anilist_links(titles):
