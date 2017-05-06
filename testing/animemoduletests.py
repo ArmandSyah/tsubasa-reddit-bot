@@ -20,6 +20,8 @@ class TestMalScrapper(unittest.TestCase):
         mal_links = malscrapper.get_anime_links(title)
         jojo_anime = malscrapper.MALAnimeInfo(mal_links[0])
         pprint.pprint(jojo_anime.get_names())
+        pprint.pprint(jojo_anime.get_airdate())
+        pprint.pprint(jojo_anime.get_synopsis())
         self.assertIsNotNone(jojo_anime)
 
 
