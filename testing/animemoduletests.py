@@ -16,7 +16,7 @@ class TestMalScrapper(unittest.TestCase):
         self.assertIsNotNone(mal_links)
 
     def test_scrape_info(self):
-        title = 'Jojo'
+        title = 'Food Wars'
         mal_links = malscrapper.get_anime_links(title)
         jojo_anime = malscrapper.MALAnimeInfo(mal_links[0])
         pprint.pprint(jojo_anime.get_names())
