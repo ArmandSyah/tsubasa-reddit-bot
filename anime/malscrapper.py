@@ -112,8 +112,8 @@ class MALAnimeInfo(object):
 def get_anime_links(title):
     """
     Uses beautiful soup to enter anime into search bar and then extract links of anime pages from the search results
-    :param title: 
-    :return: 
+    :type title: str
+    :return: Mal Search Links
     """
 
     search_url = f"https://myanimelist.net/anime.php?q={title}"
