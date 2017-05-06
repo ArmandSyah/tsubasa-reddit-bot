@@ -14,18 +14,6 @@ class MALAnimeInfo(object):
     def __init__(self, url):
         self.url = url
 
-    @staticmethod
-    def _soup_maker(url):
-        """Create BeautifulSoup Object to parse HTML easily"""
-        try:
-            res = requests.get(url)
-            res.raise_for_status()
-        except requests.exceptions.RequestException as request_error:
-            print("Failed to connect to url")
-            print(request_error)
-            sys.exit(1)
-        return bs4.BeautifulSoup(res.text, "html.parser")
-
     def get_synopsis(self):
         """Get Synopsis of anime from MAL anime page"""
         soup = MALAnimeInfo._soup_maker(self.url)
@@ -108,6 +96,18 @@ class MALAnimeInfo(object):
         formatted_duration = " ".join(duration)
         return formatted_duration
 
+    @staticmethod
+    def _soup_maker(url):
+        """Create BeautifulSoup Object to parse HTML easily"""
+        try:
+            res = requests.get(url)
+            res.raise_for_status()
+        except requests.exceptions.RequestException as request_error:
+            print("Failed to connect to url")
+            print(request_error)
+            sys.exit(1)
+        return bs4.BeautifulSoup(res.text, "html.parser")
+
 
 def get_anime_links(title):
     """
@@ -148,7 +148,7 @@ def main():
         for index, link in enumerate(anime_links):
             print(f"\nChecking Link #{index + 1}")
             anime = MALAnimeInfo(link)
-            anime_name, anime_synopsis, anime_info_dict, link = get_anime_info(link)
+            #anime_name, anime_synopsis, anime_info_dict, link = get_anime_info(link)
 
             for key, value in anime_name.items():
                 pp.pprint(f'{key} : {value}')
@@ -162,7 +162,7 @@ def main():
 
             print("\nNow just wait...")
             sleep(5)
-            anilist_page = anilist_link_maker(anime_name)
+            #anilist_page = anilist_link_maker(anime_name)
             print(f"Anilist Link: {anilist_page}")
             print("\nWait again...")
             sleep(5)

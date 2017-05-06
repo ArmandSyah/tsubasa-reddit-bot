@@ -16,7 +16,6 @@ def get_anilist_links(titles):
                            'client_id': config.client_id,
                            'client_secret': config.client_secret}
 
-    # Make a POST Request to anilist, returning back an access token for the GET requests
     anilist_post = make_post_request('https://anilist.co/api/auth/access_token', anilist_client_info)
     access_data = anilist_post.json()
     title_slugs = anilist_slugs(titles)
