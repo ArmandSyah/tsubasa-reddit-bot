@@ -3,7 +3,7 @@ import config
 import json
 
 
-def anilist_link_maker(titles):
+def get_anilist_links(titles):
     """
     Takes a title parameter and finds the anilist page for the specific anime
     :param titles: Name entry from anime_info_dict dictionary, in the form 
@@ -17,39 +17,41 @@ def anilist_link_maker(titles):
                            'client_secret': config.client_secret}
 
     # Make a POST Request to anilist, returning back an access token for the GET requests
-    try:
-        post_anilist = requests.post('https://anilist.co/api/auth/access_token', data=anilist_client_info)
-        post_anilist.raise_for_status()
-        access_data = post_anilist.json()
-    except requests.exceptions.RequestException:
-        print("Failed to make the post request, returning")
-        return
-
+    anilist_post = make_post_request('https://anilist.co/api/auth/access_token', anilist_client_info)
+    access_data = anilist_post.json()
     title_slugs = anilist_slugs(titles)
 
-    for t in title_slugs:
-        anilist_url = f'https://anilist.co/api/anime/search/{t}?access_token={access_data["access_token"]}'
-
-        # Make a GET Request to anilist, to get info on specific anime show
-        show_info = anilist_json_request(anilist_url, titles)
-
-        if show_info is None:
+    for title_slug in title_slugs:
+        anilist_link = make_anilist_link(title_slug, titles, access_data)
+        if anilist_link is None:
             continue
-
-        anilist_anime_page = f'https://anilist.co/anime/{show_info["id"]}'
-
-        # Construct a link to the anime's anilist page, and test to see if it works before returning it
-        try:
-            test_link = requests.get(anilist_anime_page)
-            test_link.raise_for_status()
-        except requests.exceptions.RequestException:
-            print("Failed to make the last Request")
-            continue
-
-        return anilist_anime_page
+        else:
+            return anilist_link
 
     print("Couldn't find the anilist link")
     return
+
+
+def make_post_request(url, query_parameters):
+    """Makes an HTTP Post Request and returns page data"""
+    try:
+        post_data = requests.post(url, data=query_parameters)
+        post_data.raise_for_status()
+    except requests.exceptions.RequestException:
+        print("Failed to make the post request, returning")
+        return
+    return post_data
+
+
+def get_request(url):
+    """Makes an HTTP Get Request and returns page data"""
+    try:
+        get_data = requests.get(url)
+        get_data.raise_for_status()
+    except requests.exceptions.RequestException:
+        print("Failed to make the last Request")
+        return
+    return get_data
 
 
 def anilist_slugs(names):
@@ -65,6 +67,19 @@ def anilist_slugs(names):
     return url_slugs
 
 
+def make_anilist_link(title_slug, titles, access_data):
+    anilist_url = f'https://anilist.co/api/anime/search/{title_slug}?access_token={access_data["access_token"]}'
+
+    # Make a GET Request to anilist, to get info on specific anime show
+    show_info = anilist_json_request(anilist_url, titles)
+
+    if show_info is None:
+        return
+
+    anilist_anime_page = f'https://anilist.co/anime/{show_info["id"]}'
+    return anilist_anime_page
+
+
 def anilist_json_request(anilist_url, title):
     """
     Pull JSON data from AniList.co for the requested show
@@ -74,32 +89,20 @@ def anilist_json_request(anilist_url, title):
     :return: JSON data for 
     """
 
-    try:
-        get_anilist_anime = requests.get(anilist_url)
-        get_anilist_anime.raise_for_status()
-        anilist_show_json = json.loads(get_anilist_anime.text)
-    except requests.exceptions.RequestException:
-        print("Failed to make Get Request")
-        return
+    get_anilist_anime = get_request(anilist_url)
+
+    anilist_show_json = json.loads(get_anilist_anime.text)
 
     if 'error' in anilist_show_json:
         print("Could not find this particular entry")
         return
 
     for show in anilist_show_json:
-        if True in [t == title['Main'] for t in show['synonyms']]:
-            return show
-
-        if True in [t == title['English'] for t in show['synonyms']]:
-            return show
-
-        if True in [t == show['title_english'] for t in title['Synonyms']]:
-            return show
-
-        if title['Main'] == show["title_romaji"]:
-            return show
-
-        if title['Japanese'] == show["title_japanese"]:
+        if (True in [t == title['Main'] for t in show['synonyms']] or
+                    True in [t == title['English'] for t in show['synonyms']] or
+                    True in [t == show['title_english'] for t in title['Synonyms']] or
+                    title['Main'] == show["title_romaji"] or
+                    title['Japanese'] == show["title_japanese"]):
             return show
 
     return
