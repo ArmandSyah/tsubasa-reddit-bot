@@ -1,6 +1,8 @@
-import requests
-import config
 import json
+
+import requests
+
+from anime.anilistinfo import anilistconfig
 
 
 def get_anilist_links(titles):
@@ -11,12 +13,11 @@ def get_anilist_links(titles):
     :return: An AniList link to the anime
     """
 
-    # Client info to be use to gain access to AniList API. All fields are hidden in a config.py file
-    anilist_client_info = {'grant_type': config.grant_type,
-                           'client_id': config.client_id,
-                           'client_secret': config.client_secret}
+    # Client info to be use to gain access to AniList API. All fields are hidden in a anilistconfig.py file
+    anilist_client_info = {'grant_type': anilistconfig.grant_type,
+                           'client_id': anilistconfig.client_id,
+                           'client_secret': anilistconfig.client_secret}
 
-    # Make a POST Request to anilist, returning back an access token for the GET requests
     anilist_post = make_post_request('https://anilist.co/api/auth/access_token', anilist_client_info)
     access_data = anilist_post.json()
     title_slugs = anilist_slugs(titles)

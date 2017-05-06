@@ -1,5 +1,5 @@
 
 .idea/
-/Anime/config.py
-Anime/__pycache__/
+/anime/anilistinfo/anilistconfig.py
+anime/__pycache__/
 

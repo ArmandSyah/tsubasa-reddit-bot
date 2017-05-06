@@ -5,9 +5,13 @@ Requirements:
         - Available Official Streaming Sites
         - Synopsis of Anime
         - Main Cast Info
-        - Picture of Anime
+        - Picture of Anime (OPT)
 
-Modules to make:
-    - Main message sender
-    - Listing Checker
-    - Stream Checker
+Things to do:
+    - Main message sender (In-Progress)
+    - Listing Checker (Finished)
+    - Stream Checker (Finished)
+    - Testing Module
+    - Scheduler for AniDB Scrapper
+    - Hummingbird/Kiritsu Support
+    - SQLite DB Support to store anime data and limit page requests (Maybe)
