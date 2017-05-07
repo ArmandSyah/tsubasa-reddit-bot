@@ -25,7 +25,15 @@ class TestAniDB(unittest.TestCase):
         mal_search = search.get_mal_anime_links('nanbaka 2017')
         nanbaka_anime = Anime(mal_search[0])
         names = nanbaka_anime.get_names()
-        anidb.get_anidb_link(names.get())
+        url = anidb.get_anidb_link(names['Main'])
+        self.assertEqual(url, 'https://anidb.net/perl-bin/animedb.pl?show=anime&aid=12558')
+
+    def test_fail_mal(self):
+        mal_search = search.get_mal_anime_links('nanbaka 2017')
+        nanbaka_anime = Anime(mal_search[0])
+        names = nanbaka_anime.get_names()
+        url = anidb.get_anidb_link(names['English'])
+        self.assertNotEqual(url, 'https://anidb.net/perl-bin/animedb.pl?show=anime&aid=12558')
 
     def tearDown(self):
         sleep(5)
