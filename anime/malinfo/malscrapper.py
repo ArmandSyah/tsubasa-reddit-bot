@@ -20,11 +20,16 @@ class MALAnimeInfo(object):
         return formatted_synopsis
 
     def get_names(self):
-        """Get the different names of the anime from MAL anime page"""
+        """
+        Get the different names of the anime from MAL anime page
+        Returns a Dictionary in this form {'Main':, 'English':, 'Synonyms', 'Japanese'}
+        Note: 'Synonyms' Key contains a list
+        """
         soup = MALAnimeInfo._soup_maker(self.url)
         main_name = soup.select("h1.h1")[0].text
         english_name = soup.find_all(text=re.compile(r'^English.*'))[0]
-        synonyms = soup.find_all(text=re.compile(r'^Synonyms.*'))[0]
+        synonyms = soup.find_all(text=re.compile(r'^Synonyms.*'))[0] \
+            if len(soup.find_all(text=re.compile(r'^Synonyms.*'))) > 0 else list()
         japanese_name = soup.find_all(text=re.compile(r'^Japanese.*'))[0]
         formatted_main_name = main_name.strip()
         formatted_english_name = (" ".join(english_name.string.parent.parent.text.strip().split(" ")[1:])

@@ -26,6 +26,7 @@ def get_anilist_links(anime_names):
         if anilist_link is None:
             continue
         else:
+            print(anilist_link)
             return anilist_link
 
     print("Couldn't find the anilist link")
@@ -43,7 +44,7 @@ def make_post_request(url, query_parameters):
     return post_data
 
 
-def get_request(url):
+def make_get_request(url):
     """Makes an HTTP Get Request and returns page data"""
     try:
         get_data = requests.get(url)
@@ -77,7 +78,7 @@ def make_anilist_link(title_slug, titles, access_data):
         return
 
     anilist_anime_page = f'https://anilist.co/anime/{show_info["id"]}'
-    return anilist_anime_page
+    return make_get_request(anilist_anime_page).url
 
 
 def anilist_json_request(anilist_url, title):
@@ -89,7 +90,7 @@ def anilist_json_request(anilist_url, title):
     :return: JSON data for 
     """
 
-    get_anilist_anime = get_request(anilist_url)
+    get_anilist_anime = make_get_request(anilist_url)
 
     anilist_show_json = json.loads(get_anilist_anime.text)
 
