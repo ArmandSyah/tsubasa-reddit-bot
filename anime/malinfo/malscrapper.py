@@ -33,11 +33,11 @@ class MALAnimeInfo(object):
                               if len(synonyms) > 0 else '').split(', ')
         formatted_japanese_name = (" ".join(japanese_name.string.parent.parent.text.strip().split(" ")[1:])
                                    if len(japanese_name) > 0 else None)
-
-        return {'Main': formatted_main_name,
-                'English': formatted_english_name,
-                'Synonyms': formatted_synonyms,
-                'Japanese': formatted_japanese_name}
+        name_dict = {'Main': formatted_main_name,
+                     'English': formatted_english_name,
+                     'Synonyms': formatted_synonyms,
+                     'Japanese': formatted_japanese_name}
+        return name_dict
 
     def get_type(self):
         """Get the anime's type from MAL anime page"""

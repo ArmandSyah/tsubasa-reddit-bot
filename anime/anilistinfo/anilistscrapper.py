@@ -1,14 +1,13 @@
 import json
-
 import requests
 
 from anime.anilistinfo import anilistconfig
 
 
-def get_anilist_links(titles):
+def get_anilist_links(anime_names):
     """
     Takes a title parameter and finds the anilist page for the specific anime
-    :param titles: Name entry from anime_info_dict dictionary, in the form 
+    :param anime_names: Name entry from anime_info_dict dictionary, in the form 
                  {'Main': name, 'English': name, 'Synonyms': [list of names], 'Japanese': name}
     :return: An AniList link to the anime
     """
@@ -20,10 +19,10 @@ def get_anilist_links(titles):
 
     anilist_post = make_post_request('https://anilist.co/api/auth/access_token', anilist_client_info)
     access_data = anilist_post.json()
-    title_slugs = anilist_slugs(titles)
+    title_slugs = anilist_slugs(anime_names)
 
     for title_slug in title_slugs:
-        anilist_link = make_anilist_link(title_slug, titles, access_data)
+        anilist_link = make_anilist_link(title_slug, anime_names, access_data)
         if anilist_link is None:
             continue
         else:
