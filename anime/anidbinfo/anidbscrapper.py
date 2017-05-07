@@ -2,7 +2,7 @@ import requests
 import os
 
 
-def scrape_anidb():
+def _scrape_anidb():
     """Open up anidb dat file, containing anime titles and id's and writting them to a text file"""
 
     if os.stat('AniDBTitles.txt').st_size > 0:
@@ -22,19 +22,6 @@ def scrape_anidb():
         ani.write(anidb_request.text)
 
 
-def _get_animeid(title):
-    """Searches through AniDB Titles"""
-    with open('AniDBTitles.txt', 'r', encoding='utf8') as ani:
-        anidb_titles = ani.read()
-        anidb_titles = anidb_titles.split("\n")
-        anidb_titles = [t for t in anidb_titles if "|en|" in t]
-    english_anime_dict = {}
-    for anime in anidb_titles:
-        anime = anime.split("|")
-        english_anime_dict[anime[3]] = anime[0]
-    return english_anime_dict[title]
-
-
 def get_anidb_link(title):
     """Takes an anime title, and makes a link to the associated AniDB page"""
     try:
@@ -45,11 +32,21 @@ def get_anidb_link(title):
     return f'https://anidb.net/perl-bin/animedb.pl?show=anime&aid={animeid}'
 
 
-def main():
-    scrape_anidb()
-    print(get_anidb_link('Nanbaka (2017)'))
-    print(get_anidb_link('Attack on Titan'))
+def _get_animeid(title):
+    """Searches through AniDB Titles"""
+    if 'AnimeMessengerRedditBot\\anime\\anidbinfo' not in os.getcwd():
+        _set_proper_path()
+    print(os.getcwd())
+    with open('AniDBTitles.txt', 'r', encoding='utf8') as ani:
+        anidb_titles = ani.read()
+        anidb_titles = anidb_titles.split("\n")
+        anidb_titles = [t for t in anidb_titles if "|en|" in t]
+    english_anime_dict = {}
+    for anime in anidb_titles:
+        anime = anime.split("|")
+        english_anime_dict[anime[3].lower()] = anime[0]
+    return english_anime_dict[title.lower()]
 
 
-if __name__ == '__main__':
-    main()
+def _set_proper_path():
+    os.chdir('..\\anime\\anidbinfo')
