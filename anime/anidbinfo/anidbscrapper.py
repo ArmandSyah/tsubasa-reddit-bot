@@ -40,7 +40,7 @@ def _get_animeid(title):
     with open('AniDBTitles.txt', 'r', encoding='utf8') as ani:
         anidb_titles = ani.read()
         anidb_titles = anidb_titles.split("\n")
-        anidb_titles = [t for t in anidb_titles if "|en|" in t]
+        anidb_titles = [t for t in anidb_titles if "|en|" in t or "|x-jat|" in t]
     english_anime_dict = {}
     for anime in anidb_titles:
         anime = anime.split("|")
