@@ -1,4 +1,4 @@
 # Fill these variables out with AniList info to gain access to AniList API
-grant_type = 'client_credentials'
-client_id = 'kwespell-1tqsy'
-client_secret = 'TWCNOzcaCnu9M9eLj8IdBvAIqpvho'
+grant_type = #Select Grant Type as described in Anilist API
+client_id = #Get Client ID from setting up Anilist API client
+client_secret = #Get Client Secret from setting up AniList API client
