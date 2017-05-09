@@ -22,21 +22,21 @@ class TestAniDB(unittest.TestCase):
         self.assertIsNone(link)
 
     def test_with_mal1(self):
-        mal_search = search.get_mal_anime_links('nanbaka 2017')
+        mal_search = search.get_links_by_brute_force('nanbaka 2017')
         nanbaka_anime = Anime(mal_search[0])
         names = nanbaka_anime.get_names()
         url = anidb.get_anidb_link(names['Main'])
         self.assertEqual(url, 'https://anidb.net/perl-bin/animedb.pl?show=anime&aid=12558')
 
     def test_with_mal2(self):
-        mal_search = search.get_mal_anime_links('Renai Boukun')
+        mal_search = search.get_links_by_brute_force('Renai Boukun')
         renai_anime = Anime(mal_search[0])
         names = renai_anime.get_names()
         url = anidb.get_anidb_link(names['Main'])
         self.assertEqual(url, 'https://anidb.net/perl-bin/animedb.pl?show=anime&aid=11822')
 
     def test_fail_mal(self):
-        mal_search = search.get_mal_anime_links('nanbaka 2017')
+        mal_search = search.get_links_by_brute_force('nanbaka 2017')
         nanbaka_anime = Anime(mal_search[0])
         names = nanbaka_anime.get_names()
         url = anidb.get_anidb_link(names['English'])

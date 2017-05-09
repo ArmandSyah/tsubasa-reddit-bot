@@ -2,7 +2,15 @@ import requests
 import bs4
 
 
-def get_mal_anime_links(title):
+def get_links_by_google_search(title):
+    pass
+
+
+def get_links_by_spice(title):
+    pass
+
+
+def get_links_by_brute_force(title):
     """
     Uses beautiful soup to enter anime into search bar and then extract links of anime pages from the search results
     :type title: str
