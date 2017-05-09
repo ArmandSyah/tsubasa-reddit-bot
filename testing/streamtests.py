@@ -27,7 +27,7 @@ class TestStreams(unittest.TestCase):
         self.assertTrue(crunchyroll_url.status_code == 200)
 
     def test_mal_search_chrunchyroll(self):
-        mal_links = search.get_mal_anime_links('Shingeki No Kyojin')
+        mal_links = search.get_links_by_brute_force('Shingeki No Kyojin')
         shingeki_anime = Anime(mal_links[0])
         names = shingeki_anime.get_names()
         print(names['English'])
