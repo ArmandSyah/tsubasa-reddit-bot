@@ -12,7 +12,7 @@ def get_anilist_links(anime_names):
     :return: An AniList link to the anime
     """
 
-    # Client info to be use to gain access to AniList API. All fields are hidden in a anilistconfig.py file
+    # Client info to be use to gain access to AniList API.
     anilistconfig = config.load_anilist_config()
     anilist_client_info = {'grant_type': anilistconfig['grant_type'],
                            'client_id': anilistconfig['client_id'],
