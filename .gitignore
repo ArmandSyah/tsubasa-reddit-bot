@@ -1,5 +1,8 @@
 
 .idea/
+/settings/anilist_config.json
+/settings/mal_config.json
+settings/google_config.json
 /anime/anilistinfo/anilistconfig.py
 anime/__pycache__/
 

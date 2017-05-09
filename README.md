@@ -8,7 +8,7 @@ info have been completed and the next step is to make the reddit interface to in
 
 ## Requirements
 
-* Python 3.5+
+* Python 3.6+
 * BeautifulSoup4
 * Requests
 * PRAW 
