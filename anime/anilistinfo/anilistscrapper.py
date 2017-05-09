@@ -1,7 +1,7 @@
 import json
 import requests
 
-from anime.anilistinfo import anilistconfig
+from settings import configloading as config
 
 
 def get_anilist_links(anime_names):
@@ -13,9 +13,10 @@ def get_anilist_links(anime_names):
     """
 
     # Client info to be use to gain access to AniList API. All fields are hidden in a anilistconfig.py file
-    anilist_client_info = {'grant_type': anilistconfig.grant_type,
-                           'client_id': anilistconfig.client_id,
-                           'client_secret': anilistconfig.client_secret}
+    anilistconfig = config.load_anilist_config()
+    anilist_client_info = {'grant_type': anilistconfig['grant_type'],
+                           'client_id': anilistconfig['client_id'],
+                           'client_secret': anilistconfig['client_secret']}
 
     anilist_post = make_post_request('https://anilist.co/api/auth/access_token', anilist_client_info)
     access_data = anilist_post.json()
