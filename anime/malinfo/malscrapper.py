@@ -1,7 +1,6 @@
 import requests
-import bs4
-import sys
 import re
+from bs4 import BeautifulSoup
 
 '''import logging
 logging.basicConfig(level=logging.DEBUG, format=' %(asctime)s - %(levelname)s- %(message)s')
@@ -102,13 +101,13 @@ class MALAnimeInfo(object):
     @staticmethod
     def _soup_maker(url):
         """Create BeautifulSoup Object to parse HTML easily"""
+        res = ''
         try:
             res = requests.get(url)
             res.raise_for_status()
         except requests.exceptions.RequestException as request_error:
             print("Failed to connect to url")
             print(request_error)
-            sys.exit(1)
-        return bs4.BeautifulSoup(res.text, "html.parser")
+        return BeautifulSoup(res.text, "html.parser")
 
 
