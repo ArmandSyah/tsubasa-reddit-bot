@@ -23,7 +23,15 @@ def get_links_by_google_search(title):
 
 
 def get_links_by_spice(title):
-    pass
+    mal_config = config.load_mal_config()
+    try:
+        mal_credentials = spice.init_auth(mal_config['mal_username'], mal_config['mal_password'])
+        mal_search = spice.search(title.strip(), spice.get_medium('anime'), mal_credentials)
+    except ValueError:
+        return
+    anime_id = mal_search[0].id
+    print(anime_id)
+    return f"https://myanimelist.net/anime/{anime_id}"
 
 
 def get_links_by_brute_force(title):
@@ -56,7 +64,7 @@ def make_get_request(url):
 
 
 def main():
-    print(get_links_by_google_search('steins;gate'))
+    print(get_links_by_spice('naruto'))
 
 if __name__ == '__main__':
     os.chdir('\\'.join(os.getcwd().split('\\')[:-1]))
