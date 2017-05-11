@@ -2,9 +2,9 @@ import unittest
 import requests
 from time import sleep
 
-import anime.malinfo.malsearch as search
-from anime.malinfo.malscrapper import MALAnimeInfo as Anime
-from anime.streaminfo import streamscrapper as streams
+import anime.mal.malsearchmethods as search
+from anime.mal.malanime import MalAnime as Anime
+from anime.streams import streamsearchmethods as streams
 
 
 class TestStreams(unittest.TestCase):
@@ -29,7 +29,7 @@ class TestStreams(unittest.TestCase):
     def test_mal_search_chrunchyroll(self):
         mal_links = search.get_links_by_brute_force('Shingeki No Kyojin')
         shingeki_anime = Anime(mal_links[0])
-        names = shingeki_anime.get_names()
+        names = shingeki_anime.names()
         print(names['English'])
         crunchyroll_url = streams.search_crunchyroll(names['English'])
         crunchyroll_url = requests.get(crunchyroll_url)

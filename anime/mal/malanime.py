@@ -3,7 +3,7 @@ import re
 from bs4 import BeautifulSoup
 
 
-class MALAnimeInfo(object):
+class MalAnime(object):
     def __init__(self, url):
         """Computation of fields only done when necessary"""
         self.url = url
@@ -21,7 +21,7 @@ class MALAnimeInfo(object):
     def synopsis(self):
         """Get Synopsis of anime from MAL anime page"""
         if self._synopsis is None:
-            soup = MALAnimeInfo._soup_maker(self.url)
+            soup = MalAnime._soup_maker(self.url)
             synopsis = soup.find(itemprop='description').get_text()
             formatted_synopsis = " ".join(synopsis.split(" "))
             self._synopsis = formatted_synopsis
@@ -35,7 +35,7 @@ class MALAnimeInfo(object):
         Note: 'Synonyms' Key contains a list
         """
         if self._names is None:
-            soup = MALAnimeInfo._soup_maker(self.url)
+            soup = MalAnime._soup_maker(self.url)
             main_name = soup.select("h1.h1")[0].text
             english_name = soup.find_all(text=re.compile(r'^English.*'))[0]
             synonyms = soup.find_all(text=re.compile(r'^Synonyms.*'))[0] \
@@ -59,7 +59,7 @@ class MALAnimeInfo(object):
     def anime_type(self):
         """Get the anime's type from MAL anime page"""
         if self._anime_type is None:
-            soup = MALAnimeInfo._soup_maker(self.url)
+            soup = MalAnime._soup_maker(self.url)
             anime_type = soup.select("div > a")[15].text
             self._anime_type = anime_type
         return self._anime_type
@@ -68,7 +68,7 @@ class MALAnimeInfo(object):
     def episodes(self):
         """Get anime's number of episode from MAL anime page"""
         if self._episodes is None:
-            soup = MALAnimeInfo._soup_maker(self.url)
+            soup = MalAnime._soup_maker(self.url)
             formatted_episodes = soup.select("div.spaceit")[0].text.split()
             self._episodes = formatted_episodes
         return self._episodes
@@ -77,7 +77,7 @@ class MALAnimeInfo(object):
     def status(self):
         """Get anime's airing status from MAL anime page"""
         if self._status is None:
-            soup = MALAnimeInfo._soup_maker(self.url)
+            soup = MalAnime._soup_maker(self.url)
             status = soup.find_all(text=re.compile(r'\b(?:%s)\b' % '|'.join(['Currently Airing',
                                                                              'Finished Airing',
                                                                              'Not yet aired'])))[0]
@@ -89,7 +89,7 @@ class MALAnimeInfo(object):
     def airdate(self):
         """Get anime's airdate from MAL anime page"""
         if self._airdate is None:
-            soup = MALAnimeInfo._soup_maker(self.url)
+            soup = MalAnime._soup_maker(self.url)
             airdate = soup.select("div.spaceit")[1].text.strip().split(" ")[2:]
             formatted_airdate = " ".join(airdate)
             self._airdate = formatted_airdate
@@ -99,7 +99,7 @@ class MALAnimeInfo(object):
     def source(self):
         """Get an anime's original source from MAL anime page"""
         if self._source is None:
-            soup = MALAnimeInfo._soup_maker(self.url)
+            soup = MalAnime._soup_maker(self.url)
             source = soup.select("div.spaceit")[3].text.split() \
                 if ("Source:" in soup.select("div.spaceit")[3].text) \
                 else soup.select("div.spaceit")[4].text.split()
@@ -111,7 +111,7 @@ class MALAnimeInfo(object):
     def genres(self):
         """Get an anime's genre's from it's MAL anime page"""
         if self._genres is None:
-            soup = MALAnimeInfo._soup_maker(self.url)
+            soup = MalAnime._soup_maker(self.url)
             genres = soup.select("div")[soup.select("div").index(soup.select("div.spaceit")[3]
                                         if ("Source:" in soup.select("div.spaceit")[3].text)
                                         else soup.select("div.spaceit")[4]) + 1]
@@ -123,7 +123,7 @@ class MALAnimeInfo(object):
     def duration(self):
         """Get the duration of an anime"""
         if self._duration is None:
-            soup = MALAnimeInfo._soup_maker(self.url)
+            soup = MalAnime._soup_maker(self.url)
             duration = (soup.select("div.spaceit")[4].text.strip().split(" ")[2:]
                             if ("Duration:" in soup.select("div.spaceit")[4].text)
                             else soup.select("div.spaceit")[5].text.strip().split(" ")[2:])
