@@ -1,9 +1,9 @@
 import unittest
 from time import sleep
 
-import anime.malinfo.malsearch as search
-from anime.malinfo.malscrapper import MALAnimeInfo as Anime
-from anime.anilistinfo import anilistscrapper
+import anime.mal.malsearchmethods as search
+from anime.mal.malanime import MalAnime as Anime
+from anime.anilist import anilistsearchmethods
 
 
 class TestAnilistInfo(unittest.TestCase):
@@ -15,7 +15,7 @@ class TestAnilistInfo(unittest.TestCase):
         title = 'Pokemon'
         mal_links = search.get_links_by_brute_force(title)
         pokemon_anime = Anime(mal_links[0])
-        anilist_url = anilistscrapper.get_anilist_links(pokemon_anime.get_names())
+        anilist_url = anilistsearchmethods.get_anilist_links(pokemon_anime.names())
         print(anilist_url)
         self.assertIsNotNone(anilist_url)
 
@@ -23,14 +23,14 @@ class TestAnilistInfo(unittest.TestCase):
         title = 'Jojo'
         mal_links = search.get_links_by_brute_force(title)
         jojo_anime = Anime(mal_links[0])
-        anilist_url = anilistscrapper.get_anilist_links(jojo_anime.get_names())
+        anilist_url = anilistsearchmethods.get_anilist_links(jojo_anime.names())
         self.assertEqual(anilist_url, 'https://anilist.co/anime/666')
 
     def test_correct_anilist_link2(self):
         title = 'Pokemon'
         mal_links = search.get_links_by_brute_force(title)
         pokemon_anime = Anime(mal_links[0])
-        anilist_url = anilistscrapper.get_anilist_links(pokemon_anime.get_names())
+        anilist_url = anilistsearchmethods.get_anilist_links(pokemon_anime.names())
         self.assertEqual(anilist_url, 'https://anilist.co/anime/527')
 
     def tearDown(self):

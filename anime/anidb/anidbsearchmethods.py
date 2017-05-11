@@ -34,7 +34,7 @@ def get_anidb_link(title):
 
 def _get_animeid(title):
     """Searches through AniDB Titles"""
-    if 'AnimeMessengerRedditBot\\anime\\anidbinfo' not in os.getcwd():
+    if 'AnimeMessengerRedditBot\\anime\\anidb' not in os.getcwd():
         _set_proper_path()
     print(os.getcwd())
     with open('AniDBTitles.txt', 'r', encoding='utf8') as ani:
@@ -49,4 +49,4 @@ def _get_animeid(title):
 
 
 def _set_proper_path():
-    os.chdir('..\\anime\\anidbinfo')
+    os.chdir('..\\anime\\anidb')
