@@ -5,6 +5,7 @@ class MalAnime(object):
     def __init__(self, url):
         """Computation of fields only done when necessary"""
         self._url = url
+        self._id = pull_mal_id(url)
         self._synopsis = None
         self._names = None
         self._anime_type = None
@@ -14,6 +15,10 @@ class MalAnime(object):
         self._source = None
         self._genres = None
         self._duration = None
+
+    @property
+    def id(self):
+        return self._id
 
     @property
     def synopsis(self):
@@ -83,4 +88,5 @@ class MalAnime(object):
         return self._duration
 
 
-
+def pull_mal_id(mal_url):
+    return [s for s in mal_url.split('/') if s.isdigit()][0]
