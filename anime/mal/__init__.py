@@ -1,0 +1,1 @@
+from anime.mal import malanime, malsearchmethods
