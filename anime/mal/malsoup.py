@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 def scrape_synopsis(mal_url):
     soup = make_beatiful_soup(mal_url)
     scraped_synopsis = soup.find(itemprop='description').get_text()
-    formatted_synopsis = " ".join(scraped_synopsis.split(" "))
+    formatted_synopsis = scraped_synopsis.strip()
     return formatted_synopsis
 
 
