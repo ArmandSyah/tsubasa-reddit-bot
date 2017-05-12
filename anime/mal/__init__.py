@@ -1,1 +1,1 @@
-from anime.mal import malanime, malsearchmethods
+__all__ = ['malanime', 'malsearchmethods']

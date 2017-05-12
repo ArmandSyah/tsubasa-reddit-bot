@@ -1,4 +1,4 @@
-from anime.mal import malsoup
+from . import malsoup
 
 
 class MalAnime(object):
