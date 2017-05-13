@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 def scrape_synopsis(mal_url):
     soup = make_beatiful_soup(mal_url)
     scraped_synopsis = soup.find(itemprop='description').get_text()
-    formatted_synopsis = " ".join(scraped_synopsis.split(" "))
+    formatted_synopsis = scraped_synopsis.strip()
     return formatted_synopsis
 
 
@@ -44,7 +44,7 @@ def scrape_anime_type(mal_url):
 def scrape_episodes(mal_url):
     soup = make_beatiful_soup(mal_url)
     episodes = soup.select("div.spaceit")[0].text
-    formatted_episodes = episodes.split()
+    formatted_episodes = episodes.split()[1]
     return formatted_episodes
 
 
@@ -79,6 +79,7 @@ def scrape_genres(mal_url):
                                                          if ("Source:" in soup.select("div.spaceit")[3].text)
                                                          else soup.select("div.spaceit")[4]) + 1]
     formatted_genres = genres.text.strip().split("\n")[1]
+    formatted_genres = [g.strip() for g in formatted_genres.split(',')]
     return formatted_genres
 
 

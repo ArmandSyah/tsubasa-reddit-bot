@@ -1,1 +1,1 @@
-from anime import mal, anilist, anidb, streams
+__all__ = ['anidb', 'anilist', 'mal', 'streams']
