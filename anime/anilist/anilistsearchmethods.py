@@ -46,7 +46,8 @@ def make_anilist_link(title, access_data):
         return
 
     anilist_anime_page = f'https://anilist.co/anime/{show_info["id"]}'
-    return utilities.make_get_request(anilist_anime_page).url
+    anilist_anime_page = utilities.make_get_request(anilist_anime_page)
+    return anilist_anime_page.url
 
 
 def anilist_json_request(anilist_url, title):

@@ -10,29 +10,36 @@ def scrape_synopsis(mal_url):
     return formatted_synopsis
 
 
-def scrape_names(mal_url):
+def scrape_main_name(mal_url):
     soup = utilities.make_beatiful_soup(mal_url)
-
     main_name = soup.select("h1.h1")[0].text
-    english_name = soup.find_all(text=re.compile(r'^English.*'))[0]
-    synonyms = (soup.find_all(text=re.compile(r'^Synonyms.*'))[0]
-                if len(soup.find_all(text=re.compile(r'^Synonyms.*'))) > 0 else list())
-    japanese_name = soup.find_all(text=re.compile(r'^Japanese.*'))[0]
-
     formatted_main_name = main_name.strip()
+    return formatted_main_name
+
+
+def scrape_english_name(mal_url):
+    soup = utilities.make_beatiful_soup(mal_url)
+    english_name = soup.find_all(text=re.compile(r'^English.*'))[0]
     formatted_english_name = (" ".join(english_name.string.parent.parent.text.strip().split(" ")[1:])
                               if len(english_name) > 0 else '')
-    formatted_synonyms = (" ".join(synonyms.string.parent.parent.text.strip().split(" ")[1:])
-                          if len(synonyms) > 0 else '').split(', ')
+    return formatted_english_name
+
+
+def scrape_japanese_name(mal_url):
+    soup = utilities.make_beatiful_soup(mal_url)
+    japanese_name = soup.find_all(text=re.compile(r'^Japanese.*'))[0]
     formatted_japanese_name = (" ".join(japanese_name.string.parent.parent.text.strip().split(" ")[1:])
                                if len(japanese_name) > 0 else '')
+    return formatted_japanese_name
 
-    name_dict = {'Main': formatted_main_name,
-                 'English': formatted_english_name,
-                 'Synonyms': formatted_synonyms,
-                 'Japanese': formatted_japanese_name}
 
-    return name_dict
+def scrape_synonyms(mal_url):
+    soup = utilities.make_beatiful_soup(mal_url)
+    synonyms = (soup.find_all(text=re.compile(r'^Synonyms.*'))[0]
+                if len(soup.find_all(text=re.compile(r'^Synonyms.*'))) > 0 else list())
+    formatted_synonyms = (" ".join(synonyms.string.parent.parent.text.strip().split(" ")[1:])
+                          if len(synonyms) > 0 else '').split(', ')
+    return formatted_synonyms
 
 
 def scrape_anime_type(mal_url):
