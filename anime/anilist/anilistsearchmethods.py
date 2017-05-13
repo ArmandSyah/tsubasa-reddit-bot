@@ -1,10 +1,10 @@
 import json
-import requests
 
 from settings import configloading as config
+from .. import utilities
 
 
-def get_anilist_links(anime_names):
+def get_anilist_link(anime_names):
     """
     Takes a title parameter and finds the anilist page for the specific anime
     :param anime_names: Name entry from anime_info_dict dictionary, in the form 
@@ -18,7 +18,7 @@ def get_anilist_links(anime_names):
                            'client_id': anilist_config['client_id'],
                            'client_secret': anilist_config['client_secret']}
 
-    anilist_post = make_post_request('https://anilist.co/api/auth/access_token', anilist_client_info)
+    anilist_post = utilities.make_post_request('https://anilist.co/api/auth/access_token', anilist_client_info)
     access_data = anilist_post.json()
     title_slugs = anilist_slugs(anime_names)
 
@@ -32,28 +32,6 @@ def get_anilist_links(anime_names):
 
     print("Couldn't find the anilist link")
     return
-
-
-def make_post_request(url, query_parameters):
-    """Makes an HTTP Post Request and returns page data"""
-    try:
-        post_data = requests.post(url, data=query_parameters)
-        post_data.raise_for_status()
-    except requests.exceptions.RequestException:
-        print("Failed to make the post request, returning")
-        return
-    return post_data
-
-
-def make_get_request(url):
-    """Makes an HTTP Get Request and returns page data"""
-    try:
-        get_data = requests.get(url)
-        get_data.raise_for_status()
-    except requests.exceptions.RequestException:
-        print("Failed to make the last Request")
-        return
-    return get_data
 
 
 def anilist_slugs(names):
@@ -79,7 +57,7 @@ def make_anilist_link(title_slug, titles, access_data):
         return
 
     anilist_anime_page = f'https://anilist.co/anime/{show_info["id"]}'
-    return make_get_request(anilist_anime_page).url
+    return utilities.make_get_request(anilist_anime_page).url
 
 
 def anilist_json_request(anilist_url, title):
@@ -91,7 +69,7 @@ def anilist_json_request(anilist_url, title):
     :return: JSON data for 
     """
 
-    get_anilist_anime = make_get_request(anilist_url)
+    get_anilist_anime = utilities.make_get_request(anilist_url)
 
     anilist_show_json = json.loads(get_anilist_anime.text)
 
