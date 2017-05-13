@@ -1,5 +1,6 @@
-import requests
 import os
+
+from anime import utilities
 
 
 def _scrape_anidb():
@@ -8,16 +9,7 @@ def _scrape_anidb():
     if os.stat('AniDBTitles.txt').st_size > 0:
         print('No need to run this script again, let\'s limit the amount of requests')
         return
-
-    anidb_request = None
-    while anidb_request is None:
-        try:
-            anidb_request = requests.get("http://anidb.net/api/anime-titles.dat.gz")
-            anidb_request.raise_for_status()
-        except requests.exceptions.RequestException:
-            print('Didn\'t work')
-            continue
-
+    anidb_request = utilities.make_get_request("http://anidb.net/api/anime-titles.dat.gz")
     with open('AniDBTitles.txt', 'w', encoding='utf8') as ani:
         ani.write(anidb_request.text)
 
