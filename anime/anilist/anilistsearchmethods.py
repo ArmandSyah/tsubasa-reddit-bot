@@ -6,6 +6,7 @@ from anime import utilities
 
 
 def get_anilist_link_by_google(title):
+    """Obtain anime's anilist page through custom google search"""
     google_config = config.load_google_config()
     try:
         google_search = f"https://www.googleapis.com/customsearch/v1?q=site:anilist.co anime{title.strip()}&start=1&key=" \
@@ -18,9 +19,8 @@ def get_anilist_link_by_google(title):
     return anilist_url
 
 
-def get_anilist_link(anime_names):
-    """
-    """
+def get_anilist_link_by_api(title):
+    """Obtain anime's anilist page through using it's api"""
 
     # Client info to be use to gain access to AniList API.
     anilist_config = config.load_anilist_config()
@@ -30,38 +30,17 @@ def get_anilist_link(anime_names):
 
     anilist_post = utilities.make_post_request('https://anilist.co/api/auth/access_token', anilist_client_info)
     access_data = anilist_post.json()
-    title_slugs = anilist_slugs(anime_names)
 
-    for title_slug in title_slugs:
-        anilist_link = make_anilist_link(title_slug, anime_names, access_data)
-        if anilist_link is None:
-            continue
-        else:
-            print(anilist_link)
-            return anilist_link
-
-    print("Couldn't find the anilist link")
-    return
+    anilist_link = make_anilist_link(title, access_data)
+    return anilist_link
 
 
-def anilist_slugs(names):
-    """Designs URL slugs in the form of '%20'"""
-    url_slugs = []
-    for _, n in names.items():
-        if type(n) is str:
-            slug = "%20".join(n.split(" "))
-            url_slugs.append(slug)
-        elif type(n) is list:
-            slug_list = ["%20".join(s.split(" ")) for s in n]
-            url_slugs.extend(slug_list)
-    return url_slugs
-
-
-def make_anilist_link(title_slug, titles, access_data):
-    anilist_url = f'https://anilist.co/api/anime/search/{title_slug}?access_token={access_data["access_token"]}'
+def make_anilist_link(title, access_data):
+    """Construct the anilist listing url"""
+    anilist_url = f'https://anilist.co/api/anime/search/{title}?access_token={access_data["access_token"]}'
 
     # Make a GET Request to anilist, to get info on specific anime show
-    show_info = anilist_json_request(anilist_url, titles)
+    show_info = anilist_json_request(anilist_url, title)
 
     if show_info is None:
         return
@@ -71,13 +50,6 @@ def make_anilist_link(title_slug, titles, access_data):
 
 
 def anilist_json_request(anilist_url, title):
-    """
-    Pull JSON data from AniList.co for the requested show
-    :param anilist_url: GET request url, obtaining anime show info from AniList API
-    :param title: Name entry from anime_info_dict dictionary, in the form 
-                 {'Main': name, 'English': name, 'Synonyms': [list of names], 'Japanese': name}
-    :return: JSON data for 
-    """
 
     get_anilist_anime = utilities.make_get_request(anilist_url)
 
@@ -88,18 +60,19 @@ def anilist_json_request(anilist_url, title):
         return
 
     for show in anilist_show_json:
-        if (True in [t == title['Main'] for t in show['synonyms']] or
-                    True in [t == title['English'] for t in show['synonyms']] or
-                    True in [t == show['title_english'] for t in title['Synonyms']] or
-                    title['Main'] == show["title_romaji"] or
-                    title['Japanese'] == show["title_japanese"]):
+        if (title.lower() == show['title_english'].lower() or
+                    title.lower() == show['title_romaji'].lower() or
+                    title == show['title_japanese'] or
+                    title.lower() in [s.lower() for s in show['synonyms']]):
             return show
 
+    print('couldn\'t find name')
     return
 
 
 def main():
-    print(get_anilist_link_by_google(' シュタインズ・ゲート'))
+    print(get_anilist_link_by_api('prison school'))
+
 
 if __name__ == '__main__':
     os.chdir('\\'.join(os.getcwd().split('\\')[:-1]))
