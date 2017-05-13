@@ -8,6 +8,21 @@ import spice_api as spice
 from settings import configloading as config
 
 
+def get_links(title):
+    """Iterates through all search methods until link is constructed"""
+    link_dispatcher = {'google': get_links_by_google_search,
+                       'spice': get_links_by_spice,
+                       'mal': get_links_by_mal_api,
+                       'brute': get_links_by_brute_force}
+
+    for _, v in link_dispatcher.items():
+        mal_url = v(title)
+        if mal_url is not None:
+            return mal_url
+
+    return
+
+
 def get_links_by_google_search(title):
     """Get Anime Link by searching MAL through Google and construct link to anime that way"""
     google_config = config.load_google_config()
