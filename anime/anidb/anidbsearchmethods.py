@@ -1,6 +1,6 @@
 import os
 
-from .. import utilities
+from anime import utilities
 
 
 def _scrape_anidb():

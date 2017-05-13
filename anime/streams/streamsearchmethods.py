@@ -2,7 +2,7 @@ import string
 
 from crunchyroll.apis.meta import MetaApi
 
-from .. import utilities
+from anime import utilities
 
 
 def search_crunchyroll(anime):

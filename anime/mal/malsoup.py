@@ -1,6 +1,6 @@
 import re
 
-from .. import utilities
+from anime import utilities
 
 
 def scrape_synopsis(mal_url):

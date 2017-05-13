@@ -1,15 +1,25 @@
 import json
+import os
 
 from settings import configloading as config
-from .. import utilities
+from anime import utilities
+
+
+def get_anilist_link_by_google(title):
+    google_config = config.load_google_config()
+    try:
+        google_search = f"https://www.googleapis.com/customsearch/v1?q=site:anilist.co anime{title.strip()}&start=1&key=" \
+                        f"{google_config['google_api_key']}&cx={google_config['custom_search_engine_id']}"
+        google_response = utilities.make_get_request(google_search).content.decode('utf8')
+        google_result = json.loads(google_response)
+        anilist_url = google_result['items'][0]['formattedUrl']
+    except:
+        return
+    return anilist_url
 
 
 def get_anilist_link(anime_names):
     """
-    Takes a title parameter and finds the anilist page for the specific anime
-    :param anime_names: Name entry from anime_info_dict dictionary, in the form 
-                 {'Main': name, 'English': name, 'Synonyms': [list of names], 'Japanese': name}
-    :return: An AniList link to the anime
     """
 
     # Client info to be use to gain access to AniList API.
@@ -86,3 +96,11 @@ def anilist_json_request(anilist_url, title):
             return show
 
     return
+
+
+def main():
+    print(get_anilist_link_by_google(' シュタインズ・ゲート'))
+
+if __name__ == '__main__':
+    os.chdir('\\'.join(os.getcwd().split('\\')[:-1]))
+    main()

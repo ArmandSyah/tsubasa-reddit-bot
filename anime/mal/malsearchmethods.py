@@ -4,7 +4,7 @@ import os
 import spice_api as spice
 
 from settings import configloading as config
-from .. import utilities
+from anime import utilities
 
 
 def get_links(title):
@@ -26,8 +26,8 @@ def get_links_by_google_search(title):
     """Get Anime Link by searching MAL through Google and construct link to anime that way"""
     google_config = config.load_google_config()
     try:
-        google_search = f"https://www.googleapis.com/customsearch/v1?q=site:myanimelist.net anime{title.strip()} \
-                        &start=1&key={google_config['google_api_key']}&cx={google_config['custom_search_engine_id']}"
+        google_search = f"https://www.googleapis.com/customsearch/v1?q=site:myanimelist.net anime{title.strip()}&start=1&key=" \
+                        f"{google_config['google_api_key']}&cx={google_config['custom_search_engine_id']}"
         google_response = utilities.make_get_request(google_search).content.decode('utf8')
         google_result = json.loads(google_response)
         mal_url = google_result['items'][0]['formattedUrl']
