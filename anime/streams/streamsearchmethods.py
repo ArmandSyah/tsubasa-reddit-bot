@@ -1,7 +1,8 @@
 import string
-import requests
 
 from crunchyroll.apis.meta import MetaApi
+
+from .. import utilities
 
 
 def search_crunchyroll(anime):
@@ -18,12 +19,7 @@ def search_funimation(anime):
     show_slug = ''.join(ch for ch in anime if ch not in exclude)
     show_slug = '-'.join(show_slug.split(" ")).lower()
     funi_url = f'https://www.funimation.com/shows/{show_slug}/'
-
-    try:
-        funi_test = requests.get(funi_url)
-        funi_test.raise_for_status()
-    except requests.exceptions.HTTPError:
-        return 'Got a 404 error, looks like this wasn\'t a valid link'
+    funi_url = utilities.make_get_request(funi_url)
 
     return funi_url
 
@@ -32,11 +28,7 @@ def search_animelab(anime):
     """Checks if anime title exists on AnimeLab website and returns a link"""
     show_slug = '-'.join(anime.split(" "))
     animelab_url = f'https://www.animelab.com/shows/{show_slug}'
-    try:
-        animelab_url = requests.get(animelab_url)
-        animelab_url.raise_for_status()
-    except requests.exceptions.HTTPError:
-        return 'Got a 404 error, looks like this wasn\'t a valid link'
+    animelab_url = utilities.make_get_request(animelab_url)
 
     return animelab_url
 

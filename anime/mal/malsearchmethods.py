@@ -1,6 +1,5 @@
 import json
 import os
-from bs4 import BeautifulSoup
 
 import spice_api as spice
 
@@ -57,7 +56,7 @@ def get_links_by_mal_api(title):
         mal_api_search = f"https://myanimelist.net/api/anime/search.xml?q={title.strip()}"
         mal_credentials = (mal_config['mal_username'], mal_config['mal_password'])
         mal_request = utilities.make_get_request(mal_api_search, mal_credentials)
-        mal_soup = BeautifulSoup(mal_request.text, 'lxml')
+        mal_soup = utilities.make_beatiful_soup(mal_request.text, 'lxml')
         mal_entries = mal_soup.anime
         anime_listings = [anime for anime in mal_entries.findAll('entry')]
         anime_id = anime_listings[0].id.get_text()
@@ -73,7 +72,7 @@ def get_links_by_brute_force(title):
     title = "%20".join(title.split(" "))
     mal_search_url = f"https://myanimelist.net/anime.php?q={title}"
     mal_request = utilities.make_get_request(mal_search_url)
-    soup = BeautifulSoup(mal_request.text, "html.parser")
+    soup = utilities.make_beatiful_soup(mal_request.text, "html.parser")
     links = [element.get("href") for element in soup.select("a.hoverinfo_trigger.fw-b.fl-l", limit=5)]
     mal_url = links[0]
     return mal_url
