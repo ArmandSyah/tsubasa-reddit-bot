@@ -1,11 +1,28 @@
-import os
 import json
+import re
+import pprint
 
 from anime import utilities
+from anime.anidb import anidbdatadumpscrape as anidbdata
 from settings import configloading as config
 
 
-def get_anidb_by_google_search(title):
+def get_anidb_links(title):
+    """Iterates through all search methods until link is constructed"""
+    anidb_regex = re.compile(r'http(s)?://anidb.net/a([0-9]){1,5}')
+    anidb_regex_alt = re.compile(r'http(s)?://anidb.net/perl-bin/animedb.pl\?show=anime&aid=([0-9]){1,5}')
+    link_dispatcher = {'google': _get_anidb_by_google_search,
+                       'api': _get_anidb_brute_force}
+
+    for _, v in link_dispatcher.items():
+        anidb_url = v(title)
+        if re.match(anidb_regex, anidb_url) is not None or re.match(anidb_regex_alt, anidb_url) is not None:
+            return anidb_url
+
+    return
+
+
+def _get_anidb_by_google_search(title):
     """Get Anime Link by searching anidb through Google and construct link to anime that way"""
     google_config = config.load_google_config()
     try:
@@ -19,31 +36,27 @@ def get_anidb_by_google_search(title):
     return anidb_url
 
 
-def get_anidb_brute_force(title):
+def _get_anidb_by_xml(title):
+    with open("AniDBTitlesXML.txt", "r", encoding='utf8') as anidb:
+        anidb_xml_content = anidb.read()
+    xml_soup = utilities.make_beautful_soup_doc(anidb_xml_content, 'lxml')
+    anidb_animetitles = xml_soup.animetitles
+    anidb_listings = [anime for anime in anidb_animetitles.findAll('anime')]
+    pprint.pprint(anidb_listings)
+
+
+def _get_anidb_brute_force(title):
     """Takes an anime title, and makes a link to the associated AniDB page"""
     try:
-        animeid = _get_animeid(title)
+        animeid = anidbdata.get_animeid(title)
     except KeyError:
         print('Either title was mispelled or does not exist')
         return
     return f'https://anidb.net/perl-bin/animedb.pl?show=anime&aid={animeid}'
 
 
-def _get_animeid(title):
-    """Searches through AniDB Titles found in AniDBTitles.txt"""
-    if 'AnimeMessengerRedditBot\\anime\\anidb' not in os.getcwd():
-        _set_proper_path()
-    print(os.getcwd())
-    with open('AniDBTitles.txt', 'r', encoding='utf8') as ani:
-        anidb_titles = ani.read()
-        anidb_titles = anidb_titles.split("\n")
-        anidb_titles = [t.lower() for t in anidb_titles if "|en|" in t or "|x-jat|" in t]
-    anime_dict = {}
-    for anime in anidb_titles:
-        anime = anime.split("|")
-        anime_dict[anime[3].lower()] = anime[0]
-    return anime_dict[title.lower()]
+def test_module():
+    _get_anidb_by_xml('Hinako Note')
 
-
-def _set_proper_path():
-    os.chdir('..\\anime\\anidb')
+if __name__ == '__main__':
+    test_module()
