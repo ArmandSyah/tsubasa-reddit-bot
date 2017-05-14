@@ -1,20 +1,25 @@
 import os
+import json
 
 from anime import utilities
+from settings import configloading as config
 
 
-def _scrape_anidb():
-    """Open up anidb dat file, containing anime titles and id's and writting them to a text file"""
+def get_anidb_by_google_search(title):
+    """Get Anime Link by searching anidb through Google and construct link to anime that way"""
+    google_config = config.load_google_config()
+    try:
+        google_search = f"https://www.googleapis.com/customsearch/v1?q=site:anidb.net anime {title.strip()} &start=1&key=" \
+                        f"{google_config['google_api_key']}&cx={google_config['custom_search_engine_id']}"
+        google_response = utilities.make_get_request(google_search).content.decode('utf8')
+        google_result = json.loads(google_response)
+        anidb_url = google_result['items'][0]['formattedUrl']
+    except Exception as e:
+        raise e
+    return anidb_url
 
-    if os.stat('AniDBTitles.txt').st_size > 0:
-        print('No need to run this script again, let\'s limit the amount of requests')
-        return
-    anidb_request = utilities.make_get_request("http://anidb.net/api/anime-titles.dat.gz")
-    with open('AniDBTitles.txt', 'w', encoding='utf8') as ani:
-        ani.write(anidb_request.text)
 
-
-def get_anidb_link(title):
+def get_anidb_brute_force(title):
     """Takes an anime title, and makes a link to the associated AniDB page"""
     try:
         animeid = _get_animeid(title)
@@ -25,19 +30,19 @@ def get_anidb_link(title):
 
 
 def _get_animeid(title):
-    """Searches through AniDB Titles"""
+    """Searches through AniDB Titles found in AniDBTitles.txt"""
     if 'AnimeMessengerRedditBot\\anime\\anidb' not in os.getcwd():
         _set_proper_path()
     print(os.getcwd())
     with open('AniDBTitles.txt', 'r', encoding='utf8') as ani:
         anidb_titles = ani.read()
         anidb_titles = anidb_titles.split("\n")
-        anidb_titles = [t for t in anidb_titles if "|en|" in t or "|x-jat|" in t]
-    english_anime_dict = {}
+        anidb_titles = [t.lower() for t in anidb_titles if "|en|" in t or "|x-jat|" in t]
+    anime_dict = {}
     for anime in anidb_titles:
         anime = anime.split("|")
-        english_anime_dict[anime[3].lower()] = anime[0]
-    return english_anime_dict[title.lower()]
+        anime_dict[anime[3].lower()] = anime[0]
+    return anime_dict[title.lower()]
 
 
 def _set_proper_path():

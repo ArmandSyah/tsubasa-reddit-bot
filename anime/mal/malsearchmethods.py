@@ -9,10 +9,10 @@ from anime import utilities
 
 def get_links(title):
     """Iterates through all search methods until link is constructed"""
-    link_dispatcher = {'google': get_links_by_google_search,
-                       'spice': get_links_by_spice,
-                       'mal': get_links_by_mal_api,
-                       'brute': get_links_by_brute_force}
+    link_dispatcher = {'google': get_mal_links_by_google_search,
+                       'spice': get_mal_links_by_spice,
+                       'mal': get_mal_links_by_mal_api,
+                       'brute': get_mal_links_by_brute_force}
 
     for _, v in link_dispatcher.items():
         mal_url = v(title)
@@ -22,7 +22,7 @@ def get_links(title):
     return
 
 
-def get_links_by_google_search(title):
+def get_mal_links_by_google_search(title):
     """Get Anime Link by searching MAL through Google and construct link to anime that way"""
     google_config = config.load_google_config()
     try:
@@ -36,7 +36,7 @@ def get_links_by_google_search(title):
     return mal_url
 
 
-def get_links_by_spice(title):
+def get_mal_links_by_spice(title):
     """Use Spice_API MAL Wrapper to retrive anime_id and use it to construct MAL link"""
     mal_config = config.load_mal_config()
     try:
@@ -49,7 +49,7 @@ def get_links_by_spice(title):
     return mal_url
 
 
-def get_links_by_mal_api(title):
+def get_mal_links_by_mal_api(title):
     """Use MAL's Official API to retrieve anime_id and use it to construct a MAL link"""
     mal_config = config.load_mal_config()
     try:
@@ -66,7 +66,7 @@ def get_links_by_mal_api(title):
     return mal_url
 
 
-def get_links_by_brute_force(title):
+def get_mal_links_by_brute_force(title):
     """Enter anime into MAL search bar and scrape for the first available MAL anime link"""
 
     title = "%20".join(title.split(" "))
@@ -79,7 +79,7 @@ def get_links_by_brute_force(title):
 
 
 def main():
-    print(get_links_by_mal_api('naruto'))
+    print(get_mal_links_by_mal_api('naruto'))
 
 if __name__ == '__main__':
     os.chdir('\\'.join(os.getcwd().split('\\')[:-1]))
