@@ -20,3 +20,11 @@ def scrape_anidb_xml():
     anidb_request = utilities.make_get_request("http://anidb.net/api/anime-titles.xml.gz")
     with open('AniDBTitlesXML.txt', 'w', encoding='utf8') as ani:
         ani.write(anidb_request.text)
+
+
+def main():
+    scrape_anidb_xml()
+
+
+if __name__ == '__main__':
+    main()

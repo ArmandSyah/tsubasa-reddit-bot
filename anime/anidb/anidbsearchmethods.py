@@ -3,6 +3,7 @@ import json
 import re
 
 from anime import utilities
+from anime.anidb import anidbdatadumpscrape
 from settings import configloading as config
 
 
