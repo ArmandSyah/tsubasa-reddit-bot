@@ -5,7 +5,7 @@ from . import malsoup
 class MalAnime(object):
     def __init__(self, url):
         """Computation of fields only done when necessary"""
-        self._soup = utilities.make_beatiful_soup(url)
+        self._soup = utilities.make_beatiful_soup_url(url)
         self._id = pull_mal_id(url)
         self._synopsis = None
         self._main_name = None

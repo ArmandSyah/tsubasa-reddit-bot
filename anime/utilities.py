@@ -24,12 +24,18 @@ def make_get_request(url, credentials=None):
     return get_data
 
 
-def make_beatiful_soup(mal_url, parser="html.parser"):
-    """Create BeautifulSoup Object to parse HTML/XML easily"""
+def make_beatiful_soup_url(url, parser="html.parser"):
+    """Create BeautifulSoup Object to parse HTML/XML easily when passing in a url"""
     try:
-        res = requests.get(mal_url)
+        res = requests.get(url)
         res.raise_for_status()
     except requests.exceptions.RequestException:
         print("Failed to connect to url")
         return
     return BeautifulSoup(res.text, parser)
+
+
+def make_beautful_soup_doc(doc, parser="lxml"):
+    """Create BeautifulSoup Object to parse HTML/XML easily, when passing in a text doc of some form"""
+    return BeautifulSoup(doc, parser)
+

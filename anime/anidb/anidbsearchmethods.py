@@ -1,5 +1,6 @@
 import json
 import re
+import pprint
 
 from anime import utilities
 from anime.anidb import anidbdatadumpscrape as anidbdata
@@ -35,6 +36,15 @@ def _get_anidb_by_google_search(title):
     return anidb_url
 
 
+def _get_anidb_by_xml(title):
+    with open("AniDBTitlesXML.txt", "r", encoding='utf8') as anidb:
+        anidb_xml_content = anidb.read()
+    xml_soup = utilities.make_beautful_soup_doc(anidb_xml_content, 'lxml')
+    anidb_animetitles = xml_soup.animetitles
+    anidb_listings = [anime for anime in anidb_animetitles.findAll('anime')]
+    pprint.pprint(anidb_listings)
+
+
 def _get_anidb_brute_force(title):
     """Takes an anime title, and makes a link to the associated AniDB page"""
     try:
@@ -43,3 +53,10 @@ def _get_anidb_brute_force(title):
         print('Either title was mispelled or does not exist')
         return
     return f'https://anidb.net/perl-bin/animedb.pl?show=anime&aid={animeid}'
+
+
+def test_module():
+    _get_anidb_by_xml('Hinako Note')
+
+if __name__ == '__main__':
+    test_module()
