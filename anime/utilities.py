@@ -26,11 +26,10 @@ def make_get_request(url, credentials=None):
 
 def make_beatiful_soup(mal_url, parser="html.parser"):
     """Create BeautifulSoup Object to parse HTML easily"""
-    res = ''
     try:
         res = requests.get(mal_url)
         res.raise_for_status()
-    except requests.exceptions.RequestException as request_error:
+    except requests.exceptions.RequestException:
         print("Failed to connect to url")
-        print(request_error)
+        return
     return BeautifulSoup(res.text, parser)
