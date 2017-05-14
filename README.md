@@ -1,6 +1,6 @@
 <div align="center"><img src="Images/tsubasa-smug.jpg"</img></div>
 
-## Tsubasa Reddit Bot
+# Tsubasa Reddit Bot
 
 My little pet project, Tsubasa, is a Work-In-Progress Reddit Bot designed to look up info on an anime (names, source,
 synopsis, ect.) for you and display it through a neat and tidy reddit message. So far, all the modules related to scrapping
