@@ -5,17 +5,6 @@ from anime import utilities
 from settings import configloading as config
 
 
-def _scrape_anidb():
-    """Open up anidb dat file, containing anime titles and id's and writting them to a text file"""
-
-    if os.stat('AniDBTitles.txt').st_size > 0:
-        print('No need to run this script again, let\'s limit the amount of requests')
-        return
-    anidb_request = utilities.make_get_request("http://anidb.net/api/anime-titles.dat.gz")
-    with open('AniDBTitles.txt', 'w', encoding='utf8') as ani:
-        ani.write(anidb_request.text)
-
-
 def get_anidb_by_google_search(title):
     """Get Anime Link by searching anidb through Google and construct link to anime that way"""
     google_config = config.load_google_config()
