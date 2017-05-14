@@ -78,8 +78,14 @@ def scrape_genres(soup):
 
 
 def scrape_duration(soup):
-    duration = (soup.select("div.spaceit")[4].text.strip().split(" ")[2:]
+    duration = (soup.select("div.spaceit")[4].text
                 if ("Duration:" in soup.select("div.spaceit")[4].text)
-                else soup.select("div.spaceit")[5].text.strip().split(" ")[2:])
-    formatted_duration = " ".join(duration)
+                else soup.select("div.spaceit")[5].text)
+    formatted_duration = " ".join(duration.strip().split(" ")[2:])
     return formatted_duration
+
+
+def scrape_rating(soup):
+    rating = soup.select("div.fl-l.score")[0].text
+    formatted_rating = rating.strip()
+    return formatted_rating

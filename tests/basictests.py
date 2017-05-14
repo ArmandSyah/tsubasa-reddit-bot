@@ -10,6 +10,8 @@ def mal_object_test():
     steins_gate = MalAnime(steins_gate_mal)
     print(food_wars.synopsis)
     print(steins_gate.genres)
+    print(food_wars.rating)
+    print(steins_gate.rating)
 
 
 def anidb_link_test():
@@ -18,8 +20,8 @@ def anidb_link_test():
 
 
 def main():
-    # mal_object_test()
-    anidb_link_test()
+    mal_object_test()
+    # anidb_link_test()
 
 
 if __name__ == '__main__':

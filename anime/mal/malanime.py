@@ -19,6 +19,7 @@ class MalAnime(object):
         self._source = None
         self._genres = None
         self._duration = None
+        self._rating = None
 
     @property
     def id(self):
@@ -95,6 +96,12 @@ class MalAnime(object):
         if self._duration is None:
             self._duration = malsoup.scrape_duration(self._soup)
         return self._duration
+
+    @property
+    def rating(self):
+        if self._rating is None:
+            self._rating = malsoup.scrape_rating(self._soup)
+        return self._rating
 
 
 def pull_mal_id(mal_url):
