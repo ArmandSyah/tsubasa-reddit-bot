@@ -17,13 +17,13 @@ def mal_object_test():
 
 
 def anidb_link_test():
-    anidb_link = anidbsearch.get_anidb_by_google_search('Hinako Note')
+    anidb_link = anidbsearch.get_anidb_links('Hinako Note')
     print(anidb_link)
 
 
 def main():
     mal_object_test()
-    # anidb_link_test()
+    anidb_link_test()
 
 
 if __name__ == '__main__':

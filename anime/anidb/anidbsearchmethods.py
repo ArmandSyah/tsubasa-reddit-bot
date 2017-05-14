@@ -1,8 +1,24 @@
 import os
 import json
+import re
 
 from anime import utilities
 from settings import configloading as config
+
+
+def get_anidb_links(title):
+    """Iterates through all search methods until link is constructed"""
+    anidb_regex = re.compile(r'http(s)?://anidb.net/a([0-9]){1,5}')
+    anidb_regex_alt = re.compile(r'http(s)?://anidb.net/perl-bin/animedb.pl\?show=anime&aid=([0-9]){1,5}')
+    link_dispatcher = {'google': get_anidb_by_google_search,
+                       'api': get_anidb_brute_force}
+
+    for _, v in link_dispatcher.items():
+        anidb_url = v(title)
+        if re.match(anidb_regex, anidb_url) is not None or re.match(anidb_regex_alt, anidb_url) is not None:
+            return anidb_url
+
+    return
 
 
 def get_anidb_by_google_search(title):

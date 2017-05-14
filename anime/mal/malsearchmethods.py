@@ -8,7 +8,7 @@ from settings import configloading as config
 from anime import utilities
 
 
-def get_links(title):
+def get_mal_links(title):
     """Iterates through all search methods until link is constructed"""
     mal_regex = re.compile(r'http(s)?://myanimelist.net/anime/([0-9]){1,5}(/.*)?')
     link_dispatcher = {'google': get_mal_links_by_google_search,
