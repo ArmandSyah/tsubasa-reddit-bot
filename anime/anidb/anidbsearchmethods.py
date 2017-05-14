@@ -1,9 +1,8 @@
 import json
 import re
-import pprint
 
 from anime import utilities
-from anime.anidb import anidbdatadumpscrape as anidbdata
+from anime.anidb import anidbsearchhelper
 from settings import configloading as config
 
 
@@ -41,22 +40,25 @@ def _get_anidb_by_xml(title):
         anidb_xml_content = anidb.read()
     xml_soup = utilities.make_beautful_soup_doc(anidb_xml_content, 'lxml')
     anidb_animetitles = xml_soup.animetitles
-    anidb_listings = [anime for anime in anidb_animetitles.findAll('anime')]
-    pprint.pprint(anidb_listings)
+    anidb_id = anidbsearchhelper.get_animeid_xml(title, anidb_animetitles)
+    if anidb_id is None:
+        return
+    return f'https://anidb.net/perl-bin/animedb.pl?show=anime&aid={anidb_id}'
 
 
 def _get_anidb_brute_force(title):
     """Takes an anime title, and makes a link to the associated AniDB page"""
     try:
-        animeid = anidbdata.get_animeid(title)
+        anidb_id = anidbsearchhelper.get_animeid(title)
     except KeyError:
         print('Either title was mispelled or does not exist')
         return
-    return f'https://anidb.net/perl-bin/animedb.pl?show=anime&aid={animeid}'
+    return f'https://anidb.net/perl-bin/animedb.pl?show=anime&aid={anidb_id}'
 
 
 def test_module():
-    _get_anidb_by_xml('Hinako Note')
+    print(_get_anidb_brute_force('Nanbaka'))
+    print(_get_anidb_by_xml('Nanbaka'))
 
 if __name__ == '__main__':
     test_module()
