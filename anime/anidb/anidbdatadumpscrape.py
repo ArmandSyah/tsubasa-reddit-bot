@@ -3,7 +3,7 @@ import os
 from anime import utilities
 
 
-def scrape_anidb_data_dump():
+def _scrape_anidb_data_dump():
     """
         Open up anidb dat file, containing anime titles and id's and writting them to a text file
         Do not run this module more than once a day
@@ -14,7 +14,7 @@ def scrape_anidb_data_dump():
         ani.write(anidb_request.text)
 
 
-def scrape_anidb_xml():
+def _scrape_anidb_xml():
     """
         Open up AniDB's XML dump and copy it into our xml
         Do not run this module more than once a day

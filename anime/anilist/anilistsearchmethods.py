@@ -10,8 +10,8 @@ from anime.anilist import anilistsearchhelper
 def get_anilist_links(title):
     """Iterates through all search methods until link is constructed"""
     anilist_regex = re.compile(r'http(s)?://anilist.co/anime/([0-9]){1,5}(/.*)?')
-    link_dispatcher = {'google': get_anilist_link_by_google,
-                       'api': get_anilist_link_by_api}
+    link_dispatcher = {'google': _get_anilist_link_by_google,
+                       'api': _get_anilist_link_by_api}
 
     for _, v in link_dispatcher.items():
         anilist_url = v(title)
@@ -21,7 +21,7 @@ def get_anilist_links(title):
     return
 
 
-def get_anilist_link_by_google(title):
+def _get_anilist_link_by_google(title):
     """Obtain anime's anilist page through custom google search"""
     google_config = config.load_google_config()
     try:
@@ -35,7 +35,7 @@ def get_anilist_link_by_google(title):
     return anilist_url
 
 
-def get_anilist_link_by_api(title):
+def _get_anilist_link_by_api(title):
     """Obtain anime's anilist page through using it's api"""
 
     # Client info to be use to gain access to AniList API.
@@ -51,10 +51,10 @@ def get_anilist_link_by_api(title):
     return anilist_link
 
 
-def main():
-    print(get_anilist_link_by_api('prison school'))
+def test_in_module():
+    print(_get_anilist_link_by_api('prison school'))
 
 
 if __name__ == '__main__':
     os.chdir('\\'.join(os.getcwd().split('\\')[:-1]))
-    main()
+    test_in_module()

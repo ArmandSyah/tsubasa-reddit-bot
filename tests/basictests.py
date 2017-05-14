@@ -4,7 +4,7 @@ from anime.anidb import anidbsearchmethods as anidbsearch
 
 
 def mal_object_test():
-    jojo_mal = malsearchmethods.get_mal_links_by_google_search('Hinako Note')
+    jojo_mal = malsearchmethods._get_mal_links_by_google_search('Hinako Note')
     jojo = MalAnime(jojo_mal)
     print(f"Main Name: {jojo.main_name}")
     print(f"English Name: {jojo.english_name}")

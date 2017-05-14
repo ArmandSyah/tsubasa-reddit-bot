@@ -10,8 +10,8 @@ def get_anidb_links(title):
     """Iterates through all search methods until link is constructed"""
     anidb_regex = re.compile(r'http(s)?://anidb.net/a([0-9]){1,5}')
     anidb_regex_alt = re.compile(r'http(s)?://anidb.net/perl-bin/animedb.pl\?show=anime&aid=([0-9]){1,5}')
-    link_dispatcher = {'google': get_anidb_by_google_search,
-                       'api': get_anidb_brute_force}
+    link_dispatcher = {'google': _get_anidb_by_google_search,
+                       'api': _get_anidb_brute_force}
 
     for _, v in link_dispatcher.items():
         anidb_url = v(title)
@@ -21,7 +21,7 @@ def get_anidb_links(title):
     return
 
 
-def get_anidb_by_google_search(title):
+def _get_anidb_by_google_search(title):
     """Get Anime Link by searching anidb through Google and construct link to anime that way"""
     google_config = config.load_google_config()
     try:
@@ -35,7 +35,7 @@ def get_anidb_by_google_search(title):
     return anidb_url
 
 
-def get_anidb_brute_force(title):
+def _get_anidb_brute_force(title):
     """Takes an anime title, and makes a link to the associated AniDB page"""
     try:
         animeid = anidbdata.get_animeid(title)
