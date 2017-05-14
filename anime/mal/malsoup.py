@@ -14,22 +14,30 @@ def scrape_main_name(soup):
 
 
 def scrape_english_name(soup):
-    english_name = soup.find_all(text=re.compile(r'^English.*'))[0]
+    english_div = soup.find_all(text=re.compile(r'^English.*'))
+    if len(english_div) <= 0:
+        return
+    english_name = english_div[0]
     formatted_english_name = (" ".join(english_name.string.parent.parent.text.strip().split(" ")[1:])
                               if len(english_name) > 0 else '')
     return formatted_english_name
 
 
 def scrape_japanese_name(soup):
-    japanese_name = soup.find_all(text=re.compile(r'^Japanese.*'))[0]
+    japanese_div = soup.find_all(text=re.compile(r'^Japanese.*'))
+    if len(japanese_div) <= 0:
+        return
+    japanese_name = japanese_div[0]
     formatted_japanese_name = (" ".join(japanese_name.string.parent.parent.text.strip().split(" ")[1:])
                                if len(japanese_name) > 0 else '')
     return formatted_japanese_name
 
 
 def scrape_synonyms(soup):
-    synonyms = (soup.find_all(text=re.compile(r'^Synonyms.*'))[0]
-                if len(soup.find_all(text=re.compile(r'^Synonyms.*'))) > 0 else list())
+    synonyms_div = soup.find_all(text=re.compile(r'^Synonyms.*'))
+    if len(synonyms_div) <= 0:
+        return
+    synonyms = synonyms_div[0]
     formatted_synonyms = (" ".join(synonyms.string.parent.parent.text.strip().split(" ")[1:])
                           if len(synonyms) > 0 else '').split(', ')
     return formatted_synonyms

@@ -25,7 +25,7 @@ def make_get_request(url, credentials=None):
 
 
 def make_beatiful_soup(mal_url, parser="html.parser"):
-    """Create BeautifulSoup Object to parse HTML easily"""
+    """Create BeautifulSoup Object to parse HTML/XML easily"""
     try:
         res = requests.get(mal_url)
         res.raise_for_status()

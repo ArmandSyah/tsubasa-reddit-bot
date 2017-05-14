@@ -105,4 +105,5 @@ class MalAnime(object):
 
 
 def pull_mal_id(mal_url):
+    print(mal_url)
     return [s for s in mal_url.split('/') if s.isdigit()][0]
