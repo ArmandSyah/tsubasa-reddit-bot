@@ -11,7 +11,8 @@ def get_anidb_links(title):
     anidb_regex = re.compile(r'http(s)?://anidb.net/a([0-9]){1,5}')
     anidb_regex_alt = re.compile(r'http(s)?://anidb.net/perl-bin/animedb.pl\?show=anime&aid=([0-9]){1,5}')
     link_dispatcher = {'google': _get_anidb_by_google_search,
-                       'api': _get_anidb_brute_force}
+                       'dat': _get_anidb_brute_force,
+                       'xml': _get_anidb_by_xml}
 
     for _, v in link_dispatcher.items():
         anidb_url = v(title)
