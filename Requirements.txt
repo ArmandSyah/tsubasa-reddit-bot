@@ -1,3 +1,4 @@
+praw
 crunchyroll==1.0.1
 requests==2.13
 bs4==0.0.1
