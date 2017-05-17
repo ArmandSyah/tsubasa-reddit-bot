@@ -4,6 +4,11 @@ import re
 def scrape_synopsis(soup):
     scraped_synopsis = soup.find(itemprop='description').get_text()
     formatted_synopsis = scraped_synopsis.strip()
+    for match in re.finditer(r'[\[<(](.*?)[\]<)]', formatted_synopsis):
+        if 'Source' in match.group(0):
+            formatted_synopsis = formatted_synopsis.replace(match.group(0), '')
+        if 'MAL' in match.group(0):
+            formatted_synopsis = formatted_synopsis.replace(match.group(0), '')
     return formatted_synopsis
 
 

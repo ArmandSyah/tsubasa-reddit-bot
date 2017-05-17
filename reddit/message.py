@@ -7,7 +7,8 @@ from anime.streams import streamsearchmethods
 
 def make_message(title):
     """Constructs message to be sent to reddit user"""
-    _set_up(title)
+    comment = ""
+    anime_info = _set_up(title)
 
 
 def _set_up(title):
