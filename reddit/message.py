@@ -37,13 +37,22 @@ def _construct_comment(anime_info):
     anime = anime_info['anime']
     comment.append(f'# {anime.main_name} \n')
     comment.append('***** \n')
-    comment.append(f'**Show Information: **\n')
-    comment.append(f'* [Anilist]({anime_info["anilist_url"]}) \n') \
-        if anime_info["anilist_url"] is not None else comment
-    comment.append(f'* [MyAnimeList]({anime_info["mal_url"]}) \n') \
-        if anime_info["mal_url"] is not None else comment
-    comment.append(f'* [AniDB]({anime_info["anidb_url"]}) \n') \
-        if anime_info["anidb_url"] is not None else comment
+
+    comment.append(f'**Show Information:**\n')
+    if anime_info["anilist_url"] is not None:
+        comment.append(f'* [Anilist]({anime_info["anilist_url"]}) \n')
+    if anime_info["mal_url"] is not None:
+        comment.append(f'* [MyAnimeList]({anime_info["mal_url"]}) \n')
+    if anime_info["anidb_url"] is not None:
+        comment.append(f'* [AniDB]({anime_info["anidb_url"]}) \n')
+
+    comment.append(f'**Streams:**\n')
+    if anime_info["crunchyroll_url"] is not None:
+        comment.append(f'* [Crunchyroll]({anime_info["crunchyroll_url"]}) \n')
+    if anime_info["funimation_url"] is not None:
+        comment.append(f'* [Funimation]({anime_info["funimation_url"]}) \n')
+    if anime_info["animelab_url"] is not None:
+        comment.append(f'* [AnimeLab]({anime_info["animelab_url"]}) \n')
     return ''.join(comment)
 
 
