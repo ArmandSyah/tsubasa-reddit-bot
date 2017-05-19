@@ -1,4 +1,3 @@
-import json
 import os
 import re
 
@@ -10,8 +9,7 @@ from anime.anilist import anilistsearchhelper
 def get_anilist_links(title):
     """Iterates through all search methods until link is constructed"""
     anilist_regex = re.compile(r'http(s)?://anilist.co/anime/([0-9]){1,5}(/.*)?')
-    link_dispatcher = {'api': _get_anilist_link_by_api,
-                       'google': _get_anilist_link_by_google}
+    link_dispatcher = {'api': _get_anilist_link_by_api}
 
     for _, v in link_dispatcher.items():
         anilist_url = v(title)
@@ -21,20 +19,6 @@ def get_anilist_links(title):
             return anilist_url
 
     return
-
-
-def _get_anilist_link_by_google(title):
-    """Obtain anime's anilist page through custom google search"""
-    google_config = config.load_google_config()
-    try:
-        google_search = f"https://www.googleapis.com/customsearch/v1?q=site:anilist.co anime show {title.strip()}&start=1&key=" \
-                        f"{google_config['google_api_key']}&cx={google_config['custom_search_engine_id']}"
-        google_response = utilities.make_get_request(google_search).content.decode('utf8')
-        google_result = json.loads(google_response)
-        anilist_url = google_result['items'][0]['link']
-    except:
-        return
-    return anilist_url
 
 
 def _get_anilist_link_by_api(title):
