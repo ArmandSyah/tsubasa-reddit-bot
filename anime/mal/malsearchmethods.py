@@ -18,6 +18,8 @@ def get_mal_links(title):
 
     for _, v in link_dispatcher.items():
         mal_url = v(title)
+        if mal_url is None:
+            continue
         if re.match(mal_regex, mal_url) is not None:
             return mal_url
 
@@ -32,7 +34,7 @@ def _get_mal_links_by_google_search(title):
                         f"{google_config['google_api_key']}&cx={google_config['custom_search_engine_id']}"
         google_response = utilities.make_get_request(google_search).content.decode('utf8')
         google_result = json.loads(google_response)
-        mal_url = google_result['items'][0]['formattedUrl']
+        mal_url = google_result['items'][0]['link']
     except:
         return
     return mal_url
