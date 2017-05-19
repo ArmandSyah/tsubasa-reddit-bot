@@ -11,8 +11,7 @@ def get_anilist_links(title):
     """Iterates through all search methods until link is constructed"""
     anilist_regex = re.compile(r'http(s)?://anilist.co/anime/([0-9]){1,5}(/.*)?')
     link_dispatcher = {'api': _get_anilist_link_by_api,
-                       'google': _get_anilist_link_by_google
-                       }
+                       'google': _get_anilist_link_by_google}
 
     for _, v in link_dispatcher.items():
         anilist_url = v(title)

@@ -4,6 +4,7 @@ from anime.mal import malsearchmethods
 from anime.mal.malanime import MalAnime
 from anime.anilist import anilistsearchmethods
 from anime.anidb import anidbsearchmethods
+from anime.streams import streamsearchmethods
 
 
 def make_message(title):
@@ -17,11 +18,17 @@ def _set_up(title):
     mal_url = malsearchmethods.get_mal_links(title)
     anilist_url = anilistsearchmethods.get_anilist_links(title)
     anidb_url = anidbsearchmethods.get_anidb_links(title)
+    crunchyroll_url = streamsearchmethods.search_crunchyroll(title)
+    funimation_url = streamsearchmethods.search_funimation(title)
+    animelab_url = streamsearchmethods.search_animelab(title)
     anime = MalAnime(mal_url)
 
     comment_info_dict = {'mal_url': mal_url,
                          'anilist_url': anilist_url,
                          'anidb_url': anidb_url,
+                         'crunchy': crunchyroll_url,
+                         'funi': funimation_url,
+                         'animelab': animelab_url,
                          'anime': anime}
 
     return comment_info_dict
@@ -42,7 +49,7 @@ def _construct_comment(anime_info):
     if anime.synonyms is not None:
         comment.append(f'* Synonyms: {" , ".join(anime.synonyms)}')
 
-    comment.append(f'**Show Information:**\n')
+    comment.append(f'\n**Show Information:**\n')
     if anime_info["anilist_url"] is not None:
         comment.append(f'* [Anilist]({anime_info["anilist_url"]})')
     if anime_info["mal_url"] is not None:
@@ -57,7 +64,9 @@ def _construct_comment(anime_info):
 
     comment.append('\n***** \n')
 
-    comment.append(f'Source: {anime.source} | ')
+    comment.append(f'Episodes: {anime.episodes} |Source: {anime.source} | Airdate: {anime.airdate} | '
+                   f'Duration: {anime.duration} | Status: {anime.status} | Type: {anime.anime_type} | '
+                   f'Rating: {anime.rating}/10 | Geners: {", ".join(anime.genres)}')
     return '\n'.join(comment)
 
 

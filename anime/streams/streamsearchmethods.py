@@ -10,6 +10,9 @@ def search_crunchyroll(anime):
 
     crunchy_api = MetaApi()
     crunchyroll_listing = list(crunchy_api.search_anime_series(anime))
+    if len(crunchyroll_listing) <= 0:
+        print('No crunchyroll listings found')
+        return
     return crunchyroll_listing[0].url
 
 
