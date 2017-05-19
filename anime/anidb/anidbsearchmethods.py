@@ -16,6 +16,8 @@ def get_anidb_links(title):
 
     for _, v in link_dispatcher.items():
         anidb_url = v(title)
+        if anidb_url is None:
+            continue
         if re.match(anidb_regex, anidb_url) is not None or re.match(anidb_regex_alt, anidb_url) is not None:
             return anidb_url
 
@@ -32,7 +34,7 @@ def _get_anidb_by_google_search(title):
         google_result = json.loads(google_response)
         anidb_url = google_result['items'][0]['link']
     except Exception as e:
-        raise e
+        return
     return anidb_url
 
 

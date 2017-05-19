@@ -18,6 +18,8 @@ def get_mal_links(title):
 
     for _, v in link_dispatcher.items():
         mal_url = v(title)
+        if mal_url is None:
+            continue
         if re.match(mal_regex, mal_url) is not None:
             return mal_url
 
