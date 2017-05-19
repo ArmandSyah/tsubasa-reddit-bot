@@ -36,28 +36,46 @@ def _construct_comment(anime_info):
     comment = []
     anime = anime_info['anime']
     comment.append(f'# {anime.main_name} \n')
+
     comment.append('***** \n')
+
+    comment.append(f'**Names:**\n')
+    if anime.english_name is not None:
+        comment.append(f'* English: {anime.english_name}\n')
+    if anime.japanese_name is not None:
+        comment.append(f'* Japanese: {anime.japanese_name}\n')
+    if len(anime.synonyms) > 0:
+        comment.append(f'* Synonyms: {" , ".join(anime.synonyms)} \n')
 
     comment.append(f'**Show Information:**\n')
     if anime_info["anilist_url"] is not None:
-        comment.append(f'* [Anilist]({anime_info["anilist_url"]}) \n')
+        comment.append(f'* [Anilist]({anime_info["anilist_url"]})')
     if anime_info["mal_url"] is not None:
-        comment.append(f'* [MyAnimeList]({anime_info["mal_url"]}) \n')
+        comment.append(f'* [MyAnimeList]({anime_info["mal_url"]})')
     if anime_info["anidb_url"] is not None:
-        comment.append(f'* [AniDB]({anime_info["anidb_url"]}) \n')
+        comment.append(f'* [AniDB]({anime_info["anidb_url"]})')
 
-    comment.append(f'**Streams:**\n')
+    comment.append(f'\n**Streams:**\n')
     if anime_info["crunchyroll_url"] is not None:
-        comment.append(f'* [Crunchyroll]({anime_info["crunchyroll_url"]}) \n')
+        comment.append(f'* [Crunchyroll]({anime_info["crunchyroll_url"]})')
     if anime_info["funimation_url"] is not None:
-        comment.append(f'* [Funimation]({anime_info["funimation_url"]}) \n')
+        comment.append(f'* [Funimation]({anime_info["funimation_url"]})')
     if anime_info["animelab_url"] is not None:
-        comment.append(f'* [AnimeLab]({anime_info["animelab_url"]}) \n')
-    return ''.join(comment)
+        comment.append(f'* [AnimeLab]({anime_info["animelab_url"]})')
+
+    comment.append('\n***** \n')
+
+    comment.append(f'## Synopsis:\n')
+    comment.append(f'{anime.synopsis}\n')
+
+    comment.append('\n***** \n')
+
+    comment.append(f'Source: {anime.source} | ')
+    return '\n'.join(comment)
 
 
 def main():
-    print(make_message('Hinako Note'))
+    print(make_message('Jojo'))
 
 if __name__ == '__main__':
     main()
