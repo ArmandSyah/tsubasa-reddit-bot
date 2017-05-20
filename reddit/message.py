@@ -20,14 +20,14 @@ def _set_up(title):
     anidb_url = anidb_search_methods.get_anidb_links(title)
     anime = MalAnime(mal_url)
     crunchyroll_url = (stream_search_methods.search_crunchyroll(anime.english_name)
-                       if anime.english_name is not None
+                       if stream_search_methods.search_crunchyroll(anime.english_name) is not None
                        else stream_search_methods.search_crunchyroll(title))
     funimation_url = (stream_search_methods.search_funimation(anime.english_name)
-                      if anime.english_name is not None
+                      if stream_search_methods.search_funimation(anime.english_name) is not None
                       else stream_search_methods.search_funimation(title))
     animelab_url = (stream_search_methods.search_animelab(anime.english_name)
-                    if anime.english_name is not None
-                    else stream_search_methods.search_funimation(title))
+                    if stream_search_methods.search_animelab(anime.english_name) is not None
+                    else stream_search_methods.search_animelab(title))
 
     comment_info_dict = {'mal_url': mal_url,
                          'anilist_url': anilist_url,
@@ -85,9 +85,11 @@ def _construct_comment(anime_info):
 
 
 def main():
-    print('Attack on Titan:\n {}'.format(make_message('Attack on Titan')))
+    '''print('Attack on Titan:\n {}'.format(make_message('Attack on Titan')))
     print('Shingeki No Kyojin:\n {}'.format(make_message('Shingeki No Kyojin')))
     print('Hinako Note:\n {}'.format(make_message('Hinako Note')))
+    print('My Hero Academia:\n {}'.format(make_message('Boku no Hero Academia')))'''
+    print('My Hero Academia 2:\n {}'.format(make_message('My Hero Academia 2')))
 
 
 if __name__ == '__main__':

@@ -30,9 +30,9 @@ def _get_mal_links_by_spice(title):
     try:
         mal_credentials = spice.init_auth(mal_config['mal_username'], mal_config['mal_password'])
         mal_search = spice.search(title.strip(), spice.get_medium('anime'), mal_credentials)
+        anime_id = mal_search[0].id
     except:
         return
-    anime_id = mal_search[0].id
     mal_url = f"https://myanimelist.net/anime/{anime_id}"
     return mal_url
 
