@@ -1,4 +1,3 @@
-import json
 import os
 import re
 
@@ -11,8 +10,7 @@ from anime import utilities
 def get_mal_links(title):
     """Iterates through all search methods until link is constructed"""
     mal_regex = re.compile(r'http(s)?://myanimelist.net/anime/([0-9]){1,5}(/.*)?')
-    link_dispatcher = {'google': _get_mal_links_by_google_search,
-                       'spice': _get_mal_links_by_spice,
+    link_dispatcher = {'spice': _get_mal_links_by_spice,
                        'mal': _get_mal_links_by_mal_api,
                        'brute': _get_mal_links_by_brute_force}
 
@@ -24,20 +22,6 @@ def get_mal_links(title):
             return mal_url
 
     return
-
-
-def _get_mal_links_by_google_search(title):
-    """Get Anime Link by searching MAL through Google and construct link to anime that way"""
-    google_config = config.load_google_config()
-    try:
-        google_search = f"https://www.googleapis.com/customsearch/v1?q=site:myanimelist.net anime {title.strip()}&start=1&key=" \
-                        f"{google_config['google_api_key']}&cx={google_config['custom_search_engine_id']}"
-        google_response = utilities.make_get_request(google_search).content.decode('utf8')
-        google_result = json.loads(google_response)
-        mal_url = google_result['items'][0]['link']
-    except:
-        return
-    return mal_url
 
 
 def _get_mal_links_by_spice(title):

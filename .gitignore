@@ -2,7 +2,6 @@
 .idea/
 /settings/anilist_config.json
 /settings/mal_config.json
-/settings/google_config.json
 anime/__pycache__/
 anime/mal/__pycache__/
 settings/__pycache__/

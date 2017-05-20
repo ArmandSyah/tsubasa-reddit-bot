@@ -1,10 +1,10 @@
-from anime.mal import malsearchmethods
-from anime.mal.malanime import MalAnime
-from anime.anidb import anidbsearchmethods as anidbsearch
+from anime.mal import mal_search_methods
+from anime.mal.mal_anime import MalAnime
+from anime.anidb import anidb_search_methods as anidbsearch
 
 
 def mal_object_test():
-    jojo_mal = malsearchmethods._get_mal_links_by_google_search('Hinako Note')
+    jojo_mal = mal_search_methods.get_mal_links('Hinako Note')
     jojo = MalAnime(jojo_mal)
     print(f"Synopsis: {jojo.synopsis}")
 
