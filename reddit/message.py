@@ -11,7 +11,7 @@ def make_message(title):
     """Constructs message to be sent to reddit user"""
     anime_info = _set_up(title)
     comment = _construct_comment(anime_info)
-    print(comment)
+    return comment
 
 
 def _set_up(title):
@@ -20,10 +20,14 @@ def _set_up(title):
     anidb_url = anidb_search_methods.get_anidb_links(title)
     anime = MalAnime(mal_url)
     crunchyroll_url = (stream_search_methods.search_crunchyroll(anime.english_name)
-                        if anime.english_name is not None
-                        else stream_search_methods.search_crunchyroll(title))
-    funimation_url = stream_search_methods.search_funimation(title)
-    animelab_url = stream_search_methods.search_animelab(title)
+                       if anime.english_name is not None
+                       else stream_search_methods.search_crunchyroll(title))
+    funimation_url = (stream_search_methods.search_funimation(anime.english_name)
+                      if anime.english_name is not None
+                      else stream_search_methods.search_funimation(title))
+    animelab_url = (stream_search_methods.search_animelab(anime.english_name)
+                    if anime.english_name is not None
+                    else stream_search_methods.search_funimation(title))
 
     comment_info_dict = {'mal_url': mal_url,
                          'anilist_url': anilist_url,
@@ -81,7 +85,10 @@ def _construct_comment(anime_info):
 
 
 def main():
-    make_message('Shingeki No Kyojin')
+    print('Attack on Titan:\n {}'.format(make_message('Attack on Titan')))
+    print('Shingeki No Kyojin:\n {}'.format(make_message('Shingeki No Kyojin')))
+    print('Hinako Note:\n {}'.format(make_message('Hinako Note')))
+
 
 if __name__ == '__main__':
     os.chdir('\\'.join(os.getcwd().split('\\')[:-1]))
