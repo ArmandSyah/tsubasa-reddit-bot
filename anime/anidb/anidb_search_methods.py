@@ -1,7 +1,7 @@
 import re
 
 from anime import utilities
-from anime.anidb import anidbsearchhelper
+from anime.anidb import anidb_search_helper
 
 
 def get_anidb_links(title):
@@ -26,7 +26,7 @@ def _get_anidb_by_xml(title):
         anidb_xml_content = anidb.read()
     xml_soup = utilities.make_beautful_soup_doc(anidb_xml_content, 'lxml')
     anidb_animetitles = xml_soup.animetitles
-    anidb_id = anidbsearchhelper.get_animeid_xml(title, anidb_animetitles)
+    anidb_id = anidb_search_helper.get_animeid_xml(title, anidb_animetitles)
     if anidb_id is None:
         return
     return f'https://anidb.net/perl-bin/animedb.pl?show=anime&aid={anidb_id}'
@@ -35,7 +35,7 @@ def _get_anidb_by_xml(title):
 def _get_anidb_brute_force(title):
     """Takes an anime title, and makes a link to the associated AniDB page"""
     try:
-        anidb_id = anidbsearchhelper.get_animeid(title)
+        anidb_id = anidb_search_helper.get_animeid(title)
     except KeyError:
         print('Either title was mispelled or does not exist')
         return

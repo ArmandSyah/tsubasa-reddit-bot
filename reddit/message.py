@@ -1,10 +1,10 @@
 import os
 
-from anime.mal import malsearchmethods
-from anime.mal.malanime import MalAnime
-from anime.anilist import anilistsearchmethods
-from anime.anidb import anidbsearchmethods
-from anime.streams import streamsearchmethods
+from anime.mal import mal_search_methods
+from anime.mal.mal_anime import MalAnime
+from anime.anilist import anilist_search_methods
+from anime.anidb import anidb_search_methods
+from anime.streams import stream_search_methods
 
 
 def make_message(title):
@@ -15,13 +15,15 @@ def make_message(title):
 
 
 def _set_up(title):
-    mal_url = malsearchmethods.get_mal_links(title)
-    anilist_url = anilistsearchmethods.get_anilist_links(title)
-    anidb_url = anidbsearchmethods.get_anidb_links(title)
-    crunchyroll_url = streamsearchmethods.search_crunchyroll(title)
-    funimation_url = streamsearchmethods.search_funimation(title)
-    animelab_url = streamsearchmethods.search_animelab(title)
+    mal_url = mal_search_methods.get_mal_links(title)
+    anilist_url = anilist_search_methods.get_anilist_links(title)
+    anidb_url = anidb_search_methods.get_anidb_links(title)
     anime = MalAnime(mal_url)
+    crunchyroll_url = (stream_search_methods.search_crunchyroll(anime.english_name)
+                        if anime.english_name is not None
+                        else stream_search_methods.search_crunchyroll(title))
+    funimation_url = stream_search_methods.search_funimation(title)
+    animelab_url = stream_search_methods.search_animelab(title)
 
     comment_info_dict = {'mal_url': mal_url,
                          'anilist_url': anilist_url,
