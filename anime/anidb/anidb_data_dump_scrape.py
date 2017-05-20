@@ -22,3 +22,10 @@ def _scrape_anidb_xml():
         ani.write(anidb_request.text)
 
 
+def main():
+    _scrape_anidb_data_dump()
+    _scrape_anidb_xml()
+
+
+if __name__ == '__main__':
+    main()
