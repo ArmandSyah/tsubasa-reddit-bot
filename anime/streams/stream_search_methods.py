@@ -42,7 +42,7 @@ def search_funimation(anime):
 
 def search_animelab(anime):
     """Checks if anime title exists on AnimeLab website and returns a link"""
-    show_slug = '-'.join(anime.split(" "))
+    show_slug = '-'.join(anime.split(" ")).lower()
     animelab_url = f'https://www.animelab.com/shows/{show_slug}'
     animelab_url = utilities.make_get_request(animelab_url)
     if animelab_url is None:

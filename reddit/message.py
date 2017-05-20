@@ -85,8 +85,8 @@ def _construct_comment(anime_info):
 
 
 def main():
-    '''print('Attack on Titan:\n {}'.format(make_message('Attack on Titan')))
-    print('Shingeki No Kyojin:\n {}'.format(make_message('Shingeki No Kyojin')))
+    print('Attack on Titan:\n {}'.format(make_message('Attack on Titan')))
+    '''print('Shingeki No Kyojin:\n {}'.format(make_message('Shingeki No Kyojin')))
     print('Hinako Note:\n {}'.format(make_message('Hinako Note')))
     print('My Hero Academia:\n {}'.format(make_message('Boku no Hero Academia')))'''
     print('My Hero Academia 2:\n {}'.format(make_message('My Hero Academia 2')))
