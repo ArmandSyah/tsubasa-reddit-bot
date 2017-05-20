@@ -24,7 +24,7 @@ def get_anidb_links(title):
 def _get_anidb_by_xml(title):
     with open("AniDBTitlesXML.txt", "r", encoding='utf8') as anidb:
         anidb_xml_content = anidb.read()
-    xml_soup = utilities.make_beautful_soup_doc(anidb_xml_content, 'lxml')
+    xml_soup = utilities.make_beautiful_soup_doc(anidb_xml_content, 'lxml')
     anidb_animetitles = xml_soup.animetitles
     anidb_id = anidb_search_helper.get_animeid_xml(title, anidb_animetitles)
     if anidb_id is None:

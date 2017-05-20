@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
+from difflib import SequenceMatcher
 
 
 def make_post_request(url, query_parameters=None):
@@ -35,7 +36,10 @@ def make_beatiful_soup_url(url, parser="html.parser"):
     return BeautifulSoup(res.text, parser)
 
 
-def make_beautful_soup_doc(doc, parser="lxml"):
+def make_beautiful_soup_doc(doc, parser="lxml"):
     """Create BeautifulSoup Object to parse HTML/XML easily, when passing in a text doc of some form"""
     return BeautifulSoup(doc, parser)
 
+
+def similar(a, b):
+    return SequenceMatcher(None, a, b).ratio()
