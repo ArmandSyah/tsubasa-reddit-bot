@@ -8,6 +8,10 @@ from anime.anilist import anilist_search_helper
 
 def get_anilist_links(title):
     """Iterates through all search methods until link is constructed"""
+    title = title.lower().split(' ')
+    if 'season' in title:
+        title.remove('season')
+    title = ' '.join(title)
     anilist_regex = re.compile(r'http(s)?://anilist.co/anime/([0-9]){1,5}(/.*)?')
     link_dispatcher = {'api': _get_anilist_link_by_api}
 

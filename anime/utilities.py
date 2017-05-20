@@ -8,8 +8,9 @@ def make_post_request(url, query_parameters=None):
     try:
         post_data = requests.post(url, data=query_parameters)
         post_data.raise_for_status()
-    except requests.exceptions.RequestException:
+    except requests.exceptions.RequestException as r:
         print(f"Can't make post request with this URL: {url}")
+        print(r)
         return
     return post_data
 
@@ -30,7 +31,8 @@ def make_beatiful_soup_url(url, parser="html.parser"):
     try:
         res = requests.get(url)
         res.raise_for_status()
-    except requests.exceptions.RequestException:
+    except requests.exceptions.RequestException as r:
+        print(r)
         print(f"Can't make get request with this URL: {url}")
         return
     return BeautifulSoup(res.text, parser)
