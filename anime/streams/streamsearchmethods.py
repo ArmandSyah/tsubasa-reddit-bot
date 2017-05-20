@@ -23,8 +23,9 @@ def search_funimation(anime):
     show_slug = '-'.join(show_slug.split(" ")).lower()
     funi_url = f'https://www.funimation.com/shows/{show_slug}/'
     funi_url = utilities.make_get_request(funi_url)
-
-    return funi_url
+    if funi_url is None:
+        return
+    return funi_url.url
 
 
 def search_animelab(anime):
@@ -32,7 +33,8 @@ def search_animelab(anime):
     show_slug = '-'.join(anime.split(" "))
     animelab_url = f'https://www.animelab.com/shows/{show_slug}'
     animelab_url = utilities.make_get_request(animelab_url)
-
-    return animelab_url
+    if animelab_url is None:
+        return
+    return animelab_url.url
 
 

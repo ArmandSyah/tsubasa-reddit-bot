@@ -57,6 +57,14 @@ def _construct_comment(anime_info):
     if anime_info["anidb_url"] is not None:
         comment.append(f'* [AniDB]({anime_info["anidb_url"]})')
 
+    comment.append(f'\n**Streams:**\n')
+    if anime_info["crunchy"] is not None:
+        comment.append(f'* [Crunchyroll]({anime_info["crunchy"]})')
+    if anime_info["funi"] is not None:
+        comment.append(f'* [Funimation]({anime_info["funi"]})')
+    if anime_info["animelab"] is not None:
+        comment.append(f'* [Animelab (for Aus and NZ)]({anime_info["animelab"]})')
+
     comment.append('\n***** \n')
 
     comment.append(f'## Synopsis:\n')
@@ -64,14 +72,14 @@ def _construct_comment(anime_info):
 
     comment.append('\n***** \n')
 
-    comment.append(f'Episodes: {anime.episodes} |Source: {anime.source} | Airdate: {anime.airdate} | '
-                   f'Duration: {anime.duration} | Status: {anime.status} | Type: {anime.anime_type} | '
-                   f'Rating: {anime.rating}/10 | Geners: {", ".join(anime.genres)}')
+    comment.append(f'**Episodes:** {anime.episodes} |**Source:** {anime.source} | **Airdate:** {anime.airdate} | '
+                   f'**Duration:** {anime.duration} |**Status:** {anime.status} | **Type:** {anime.anime_type} | '
+                   f'**Rating:** {anime.rating}/10 | **Genres:** {", ".join(anime.genres)}')
     return '\n'.join(comment)
 
 
 def main():
-    make_message('Attack on Titan')
+    make_message('Shingeki No Kyojin')
 
 if __name__ == '__main__':
     os.chdir('\\'.join(os.getcwd().split('\\')[:-1]))
