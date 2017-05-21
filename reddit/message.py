@@ -85,8 +85,8 @@ def _construct_comment(anime_info):
 
 
 def main():
-    print('Girls Und Panzer:\n {}'.format(make_message('Girls Und Panzer')))
-    print('Girls und Panzer der Film:\n {}'.format(make_message('Girls und panzer der Film')))
+    print('Girls Und Panzer:\n {}'.format(make_message('Attack on Titan')))
+    print('Girls und Panzer der Film:\n {}'.format(make_message('Girls und Panzer der Film')))
 
 
 if __name__ == '__main__':
