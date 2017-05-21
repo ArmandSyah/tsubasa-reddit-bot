@@ -27,9 +27,7 @@ def _get_anidb_by_xml(title):
     xml_soup = utilities.make_beautiful_soup_doc(anidb_xml_content, 'lxml')
     anidb_animetitles = xml_soup.animetitles
     anidb_id = anidb_search_helper.get_animeid_xml(title, anidb_animetitles)
-    if anidb_id is None:
-        return
-    return f'https://anidb.net/perl-bin/animedb.pl?show=anime&aid={anidb_id}'
+    return f'https://anidb.net/perl-bin/animedb.pl?show=anime&aid={anidb_id}' if anidb_id is not None else None
 
 
 def _get_anidb_brute_force(title):
