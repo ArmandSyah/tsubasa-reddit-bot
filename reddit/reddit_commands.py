@@ -21,6 +21,7 @@ def parse_reddit_messages(reddit):
     for item in reddit.inbox.unread(limit=None):
         item.mark_read()
         comment_body = item.body
+        print(comment_body)
         search_title = _parse_message(comment_body)
         if search_title is None:
             continue
@@ -44,6 +45,7 @@ def main():
         try:
             print('Parsing')
             parse_reddit_messages(reddit)
+            sleep(5)
         except:
             print('Trying again')
             sleep(5)

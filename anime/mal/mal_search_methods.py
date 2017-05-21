@@ -33,7 +33,7 @@ def _get_mal_links_by_spice(title):
         mal_credentials = spice.init_auth(mal_config['mal_username'], mal_config['mal_password'])
         mal_search = spice.search(title.strip(), spice.get_medium('anime'), mal_credentials)
         for m in mal_search:
-            if m.title == title or m.english == title:
+            if m.title.lower() == title.lower() or m.english.lower() == title.lower():
                 anime_id = mal_search[0].id
                 break
     except:
@@ -56,7 +56,9 @@ def _get_mal_links_by_mal_api(title):
         mal_entries = mal_soup.anime
         anime_listings = [anime for anime in mal_entries.findAll('entry')]
         for m in anime_listings:
-            if m.title.get_text() == title or m.english.get_text() == title:
+            synonyms = [s for s in m.synonyms.get_text().lower().split('; ')]
+            if m.title.get_text().lower() == title.lower() or m.english.get_text().lower() == title.lower() or \
+                    title.lower() in synonyms:
                 anime_id = m.id.get_text()
                 break
     except Exception as e:
@@ -87,8 +89,9 @@ def _get_mal_links_by_brute_force(title):
 
 def main():
     print(_get_mal_links_by_brute_force('My Hero Academia Season 2'))
-
+    print(_get_mal_links_by_mal_api('Pokemon'))
 
 if __name__ == '__main__':
-    os.chdir('\\'.join(os.getcwd().split('\\')[:-1]))
+    os.chdir('\\'.join(os.getcwd().split('\\')[:-2]))
+    print(os.getcwd())
     main()
