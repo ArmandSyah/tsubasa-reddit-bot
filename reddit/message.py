@@ -85,7 +85,7 @@ def _construct_comment(anime_info):
 
 
 def main():
-    print('Erased:\n {}'.format(make_message('Erased')))
+    print('Grimoire of Zero:\n {}'.format(make_message('Grimoire of Zero')))
 
 
 if __name__ == '__main__':

@@ -45,7 +45,7 @@ def main():
         try:
             print('Parsing')
             parse_reddit_messages(reddit)
-            sleep(3)
+            sleep(5)
         except:
             print('Trying again')
             sleep(5)
