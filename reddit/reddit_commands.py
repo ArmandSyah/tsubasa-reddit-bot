@@ -46,7 +46,8 @@ def main():
             print('Parsing')
             parse_reddit_messages(reddit)
             sleep(5)
-        except:
+        except Exception as e:
+            print(e)
             print('Trying again')
             sleep(5)
 
