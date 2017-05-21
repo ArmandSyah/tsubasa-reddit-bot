@@ -1,5 +1,5 @@
 {
-  "grant_type": "",
-  "client_id": "",
-  "client_secret": ""
+  "grant_type": "client_credentials",
+  "client_id": "kwespell-h5pcy",
+  "client_secret": "cgKzhILdeGn7vrHNZFO8CK"
 }
