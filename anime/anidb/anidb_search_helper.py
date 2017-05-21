@@ -9,14 +9,9 @@ def get_animeid(title):
         anidb_titles = ani.read()
         anidb_titles = anidb_titles.split("\n")
         anidb_titles = [t.lower() for t in anidb_titles if "|en|" in t or "|x-jat|" in t]
-    anime_dict = {}
-    for anime in anidb_titles:
-        anime = anime.split("|")
-        anime_dict[anime[3].lower()] = anime[0]
-    similar_name_dict = {}
-    for anidb_title, aid in anime_dict.items():
-        if utilities.similar(title, anidb_title) > .5:
-            similar_name_dict[anidb_title] = utilities.similar(title, anidb_title)
+    anime_dict = {anime.split('|')[3].lower(): anime.split('|')[0] for anime in anidb_titles}
+    similar_name_dict = {anidb_title: utilities.similar(title, anidb_title) for anidb_title, _ in anime_dict.items()
+                         if utilities.similar(title, anidb_title) > .5}
     ordered_links = list(OrderedDict(sorted(similar_name_dict.items(), key=lambda t: t[1])))
     return anime_dict[ordered_links[-1]]
 

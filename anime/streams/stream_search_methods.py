@@ -20,7 +20,7 @@ def search_crunchyroll(anime):
             else:
                 break
     except:
-        print('Crunchyroll might be down')
+        print('Crunchyroll url couldn\'t be retrieved')
         return
 
     return crunchyroll_listing[0].url if len(crunchyroll_listing) > 0 else None
@@ -43,7 +43,7 @@ def search_funimation(anime):
             else:
                 break
     except:
-        print('Funimation might be down')
+        print('Funimation url couldn\'t be retrieved')
         return
     return funi_url.url if funi_url is not None else None
 
@@ -51,13 +51,19 @@ def search_funimation(anime):
 def search_animelab(anime):
     """Checks if anime title exists on AnimeLab website and returns a link"""
     try:
-        show_slug = '-'.join(anime.split(" ")).lower()
-        animelab_url = f'https://www.animelab.com/shows/{show_slug}'
-        animelab_url = utilities.make_get_request(animelab_url)
-        if animelab_url is None:
-            return
+        keywords = anime.split(' ')
+        animelab_url = None
+        while len(keywords) > 0:
+            show_slug = '-'.join(keywords).lower()
+            animelab_url = f'https://www.animelab.com/shows/{show_slug}'
+            animelab_url = utilities.make_get_request(animelab_url)
+            if animelab_url is None:
+                keywords.pop()
+                return
+            else:
+                break
     except:
-        print('Animelab might be down')
+        print('Animelab url couldn\'t be retrieved')
         return
     return animelab_url.url
 

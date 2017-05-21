@@ -22,8 +22,6 @@ def get_mal_links(title):
         if re.match(mal_regex, mal_url) is not None:
             return mal_url
 
-    return
-
 
 def _get_mal_links_by_spice(title):
     """Use Spice_API MAL Wrapper to retrive anime_id and use it to construct MAL link"""
@@ -36,12 +34,11 @@ def _get_mal_links_by_spice(title):
             if m.title.lower() == title.lower() or m.english.lower() == title.lower():
                 anime_id = mal_search[0].id
                 break
-    except:
-        return
-    if anime_id is None:
+    except Exception as e:
+        print(e)
         return
     mal_url = f"https://myanimelist.net/anime/{anime_id}"
-    return mal_url
+    return mal_url if anime_id is not None else None
 
 
 def _get_mal_links_by_mal_api(title):
@@ -54,8 +51,7 @@ def _get_mal_links_by_mal_api(title):
         mal_request = utilities.make_get_request(mal_api_search, mal_credentials)
         mal_soup = utilities.make_beautiful_soup_doc(mal_request.text, 'lxml')
         mal_entries = mal_soup.anime
-        anime_listings = [anime for anime in mal_entries.findAll('entry')]
-        for m in anime_listings:
+        for m in mal_entries.findAll('entry'):
             synonyms = [s for s in m.synonyms.get_text().lower().split('; ')]
             if m.title.get_text().lower() == title.lower() or m.english.get_text().lower() == title.lower() or \
                     title.lower() in synonyms:
@@ -64,10 +60,8 @@ def _get_mal_links_by_mal_api(title):
     except Exception as e:
         print(e)
         return
-    if anime_id is None:
-        return
     mal_url = f"https://myanimelist.net/anime/{anime_id}"
-    return mal_url
+    return mal_url if anime_id is not None else None
 
 
 def _get_mal_links_by_brute_force(title):
@@ -78,13 +72,9 @@ def _get_mal_links_by_brute_force(title):
     mal_request = utilities.make_get_request(mal_search_url)
     soup = utilities.make_beatiful_soup_url(mal_request.url, "html.parser")
     links = [element for element in soup.select("a.hoverinfo_trigger.fw-b.fl-l", limit=5)]
-    link_dict = {}
-    for link in links:
-        link_dict[link.get('href')] = utilities.similar(link.get_text(), title)
+    link_dict = {link.get('href'): utilities.similar(link.get_text, title) for link in links}
     ordered_links = list(OrderedDict(sorted(link_dict.items(), key=lambda t: t[1])))
-    if len(ordered_links) == 0:
-        return
-    return ordered_links[-1]
+    return ordered_links[-1] if len(ordered_links) > 0 else None
 
 
 def main():
