@@ -80,6 +80,8 @@ def _get_mal_links_by_brute_force(title):
     for link in links:
         link_dict[link.get('href')] = utilities.similar(link.get_text(), title)
     ordered_links = list(OrderedDict(sorted(link_dict.items(), key=lambda t: t[1])))
+    if len(ordered_links) == 0:
+        return
     return ordered_links[-1]
 
 
