@@ -1,5 +1,6 @@
 import os
 import re
+import string
 
 from settings import configloading as config
 from anime import utilities
@@ -8,6 +9,8 @@ from anime.anilist import anilist_search_helper
 
 def get_anilist_links(title):
     """Iterates through all search methods until link is constructed"""
+    exclude = set(string.punctuation)
+    title = ''.join(ch for ch in title if ch not in exclude)
     title = title.lower().split(' ')
     if 'season' in title:
         title.remove('season')

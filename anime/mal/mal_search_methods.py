@@ -1,5 +1,6 @@
 import os
 import re
+import string
 from collections import OrderedDict
 
 import spice_api as spice
@@ -10,6 +11,8 @@ from anime import utilities
 
 def get_mal_links(title):
     """Iterates through all search methods until link is constructed"""
+    exclude = set(string.punctuation)
+    title = ''.join(ch for ch in title if ch not in exclude)
     mal_regex = re.compile(r'http(s)?://myanimelist.net/anime/([0-9]){1,5}(/.*)?')
     link_dispatcher = {'spice': _get_mal_links_by_spice,
                        'mal': _get_mal_links_by_mal_api,
@@ -71,7 +74,7 @@ def _get_mal_links_by_brute_force(title):
     mal_search_url = f"https://myanimelist.net/anime.php?q={title_slug}"
     mal_request = utilities.make_get_request(mal_search_url)
     soup = utilities.make_beatiful_soup_url(mal_request.url, "html.parser")
-    links = [element for element in soup.select("a.hoverinfo_trigger.fw-b.fl-l", limit=5)]
+    links = [element for element in soup.select("a.hoverinfo_trigger.fw-b.fl-l", limit=50)]
     link_dict = {link.get('href'): utilities.similar(link.get_text(), title) for link in links}
     ordered_links = list(OrderedDict(sorted(link_dict.items(), key=lambda t: t[1])))
     return ordered_links[-1] if len(ordered_links) > 0 else None
