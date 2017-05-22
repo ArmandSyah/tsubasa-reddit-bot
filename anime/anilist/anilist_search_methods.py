@@ -36,7 +36,6 @@ def _get_anilist_link_by_api(title):
 
     anilist_post = utilities.make_post_request('https://anilist.co/api/auth/access_token', anilist_client_info)
     access_data = anilist_post.json()
-
     anilist_link = anilist_search_helper.make_anilist_link(title, access_data)
     return anilist_link
 
