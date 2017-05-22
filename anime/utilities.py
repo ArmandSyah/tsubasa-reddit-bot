@@ -20,8 +20,9 @@ def make_get_request(url, credentials=None):
     try:
         get_data = requests.get(url, auth=credentials)
         get_data.raise_for_status()
-    except requests.exceptions.RequestException:
+    except requests.exceptions.RequestException as r:
         print(f"Can't make get request with this URL: {url}")
+        print(r)
         return
     return get_data
 

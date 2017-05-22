@@ -1,5 +1,6 @@
 import os
 import re
+import string
 
 from settings import configloading as config
 from anime import utilities
@@ -8,6 +9,8 @@ from anime.anilist import anilist_search_helper
 
 def get_anilist_links(title):
     """Iterates through all search methods until link is constructed"""
+    exclude = set(string.punctuation)
+    title = ''.join(ch for ch in title if ch not in exclude)
     title = title.lower().split(' ')
     if 'season' in title:
         title.remove('season')
@@ -36,7 +39,6 @@ def _get_anilist_link_by_api(title):
 
     anilist_post = utilities.make_post_request('https://anilist.co/api/auth/access_token', anilist_client_info)
     access_data = anilist_post.json()
-
     anilist_link = anilist_search_helper.make_anilist_link(title, access_data)
     return anilist_link
 

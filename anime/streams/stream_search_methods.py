@@ -8,6 +8,8 @@ from anime import utilities
 def search_crunchyroll(anime):
     """Searches if anime exists on Crunchyroll and returns a link"""
     try:
+        exclude = set(string.punctuation)
+        anime = ''.join(ch for ch in anime if ch not in exclude)
         keywords = anime.split(' ')
         crunchy_api = MetaApi()
         crunchyroll_listing = []
@@ -51,6 +53,8 @@ def search_funimation(anime):
 def search_animelab(anime):
     """Checks if anime title exists on AnimeLab website and returns a link"""
     try:
+        exclude = set(string.punctuation)
+        anime = ''.join(ch for ch in anime if ch not in exclude)
         keywords = anime.split(' ')
         animelab_url = None
         while len(keywords) > 0:
