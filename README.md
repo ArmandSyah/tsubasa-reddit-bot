@@ -23,7 +23,7 @@ installed
 Pip is usually shipped with the Python download. In case it's not, follow instructions to install Pip 
 [here](https://stackoverflow.com/questions/4750806/how-do-i-install-pip-on-windows))*
 
-####Setting up your accounts
+#### Setting up your accounts
 
 1. Click on 'Clone or download' button and then 'Download Zip'. Extract the folder where ever you want
 
