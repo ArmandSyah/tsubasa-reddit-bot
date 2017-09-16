@@ -1,6 +1,6 @@
+#!/usr/bin/env python
+
 import praw
-import os
-from time import sleep
 
 from reddit import message
 
@@ -38,19 +38,3 @@ def _parse_message(comment_body):
     search_title.insert(0, first_word)
     return ' '.join(search_title).strip()
 
-
-def main():
-    reddit = authenticate()
-    while True:
-        try:
-            print('Parsing')
-            parse_reddit_messages(reddit)
-            sleep(5)
-        except Exception as e:
-            print(e)
-            print('Trying again')
-            sleep(5)
-
-if __name__ == '__main__':
-    os.chdir('\\'.join(os.getcwd().split('\\')[:-1]))
-    main()
