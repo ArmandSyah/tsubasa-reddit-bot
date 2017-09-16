@@ -45,8 +45,8 @@ Pip is usually shipped with the Python download. In case it's not, follow instru
 [developer settings](https://anilist.co/settings/developer) and click on 'Create New Api v1 Client'
 Here, input any name you want in the field and click 'Save'
 
-<div><img src="Images/anilistdev.png /></div>
-<div><img src="Images/name.png /></div>
+<div><img src="Images/anilistdev.png ></img></div>
+<div><img src="Images/name.png ></img></div>
 
 5. Once you've made your AniList client, go to settings folders and open up anilist_config.json. Here take the client ID
 and client secret from your AniList client page and place them in the respective place similar to the mal_config.json
@@ -64,7 +64,7 @@ In the client_id field, take the string underneath 'personal use script' and pas
 field take the string beside 'secret' on the apps page. Type in your Reddit username and password in the respective 
 fields. Put anyting you want in the user_agent field, or leave it empty if you so choose.
 
-<div><img src="Images/reddit.png /></div>
+<div><img src="Images/reddit.png ></img></div>
 
 Now that all the accounts are properly set up, it's time to set up the bot
 
