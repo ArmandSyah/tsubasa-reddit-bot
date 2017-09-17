@@ -82,7 +82,7 @@ Now that all the accounts are properly set up, it's time to set up the bot
     ```
     python run.py
     ```
-    And now your bot should be running. If it is, then you should see this message
+    And now your bot should be running. If it is, then you should see a message similar to this:
     
     ```
     Authenticating
