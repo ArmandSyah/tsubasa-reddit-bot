@@ -1,5 +1,5 @@
 praw
 crunchyroll==1.0.1
-requests==2.14.2
+requests>=2.20.0
 bs4==0.0.1
 spice_api
